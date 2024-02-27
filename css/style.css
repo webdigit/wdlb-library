@@ -1,0 +1,200 @@
+.img-logo {
+    text-align: center;
+}
+
+.content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    max-width: 1024px;
+    display: block;
+    margin: 20px auto;
+}
+
+.content .title {
+    border-bottom: 1px solid #000;
+    margin: 0px 0px 15px 0px;
+    padding-bottom: 5px;
+    font-weight: 100;
+    font-size: 20px;
+}
+
+.content h3.title {
+    border-bottom: none;
+    margin: 0px 0px 15px 0px;
+    padding-bottom: 5px;
+    font-weight: 100;
+    font-size: 15px;
+}
+
+.addnew-btn {
+    padding: 10px 20px;
+    background-color: #000;
+    color: #fff;
+}
+
+.end-form-ressource {
+    margin-top: 20px;
+    width: 100%;
+}
+
+.end-form-ressource .container-cat-choice {
+    display: inline-block;
+    width: 48%;
+    vertical-align: bottom;
+}
+
+.end-form-ressource .container-cat-choice select {
+    width: 100%;
+    height: 210px;
+}
+
+.preview-img img {
+    width: 80px;
+    height: auto;
+}
+
+.end-form-ressource textarea {
+    display: inline-block;
+    width: 50%;
+}
+
+.edit-form .close-form-btn {
+    margin-left: 15px !important;
+}
+
+.edit-form .close-form-btn,
+.edit-form .submit-btn {
+    display: inline-block;
+    width: 49%;
+}
+
+.content .form .submit-btn {
+    width: 100%;
+}
+
+.edit-form .close-form-btn,
+.content .form .submit-btn,
+.edit-form .submit-btn {
+    border: 1px solid #000;
+    padding: 10px 20px;
+    margin: 20px 0px 0px 0px;
+    background-color: #000;
+    color: #fff;
+}
+
+.edit-form .close-form-btn:hover,
+.content .form .submit-btn:hover,
+.addnew-btn:hover,
+.edit-form .submit-btn:hover {
+    background-color: #575656;
+    border-color: #575656;
+    cursor: pointer;
+}
+
+.content .form label {
+    padding-right: 10px;
+    width: 230px;
+    display: inline-block;
+}
+
+.form-input-option {
+    margin-bottom: 10px;
+}
+
+.form-input-option input {
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-radius: 0;
+}
+
+.wd-input {
+    width: 500px;
+}
+
+#wd_add_files #wd_link {
+    display: none;
+}
+
+.wd-category-name {
+    background-color: #51b4ff;
+    color: #fff;
+    padding: 2px 10px;
+    border-radius: 25px;
+    margin-right: 2px;
+}
+.name-input-file {
+    width: 100%;
+}
+.container-ressource-form {
+    width: 100%;
+    margin: 10px 0;
+}
+.container-ressource-form .ressource-data-info {
+    display: inline-block;
+    width: 58%;
+}
+.container-ressource-form .wd_is_link {
+    display: inline-block;
+    width: 40%;
+}
+/*_____ STATS PAGE _____*/
+.dataStats {
+    width: 100%;
+    border: 1px solid #000;
+}
+
+.header-data {
+    background-color: #d3d3d3;
+    font-weight: 600;
+}
+
+.header-data,
+.data-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    border-bottom: 1px solid #000;
+}
+
+.header-data:last-child,
+.data-row:last-child {
+    border-bottom: none;
+}
+
+.header-data-item,
+.data-row-item {
+    padding: 10px 10px;
+    width: 15%;
+    text-align: center;
+}
+
+.data-row:nth-child(odd) {
+    background-color: #d3d3d3;
+}
+
+/*_____ SETTINGS PAGE _____*/
+#succes_saved {
+    background-color: #acdf87;
+    border: 1px solid #1e5631;
+    color: #1e5631;
+    margin: 10px 0;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+/*_____ CATEGORY PAGE _____*/
+#add-category-form {
+    display: none;
+}
+.wd-icon-cat {
+    width: 30px;
+}
+#add-category-form {
+    margin-top: 20px;
+}
+#add-category-form .form-input-cat {
+    width: 32%;
+}

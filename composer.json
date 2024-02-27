@@ -1,0 +1,12 @@
+{
+    "name": "julienhalfkan/webdigit-library",
+    "require": {
+        "smalot/pdfparser": "^2.2"
+    },
+    "authors": [
+        {
+            "name": "Julien Halfkan",
+            "email": "j.halfkan@webdigit.be"
+        }
+    ]
+}

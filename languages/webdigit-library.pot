@@ -1,0 +1,64 @@
+# Copyright (C) 2022 Webdigit
+# This file is distributed under the same license as the Webdigit - Library plugin.
+msgid ""
+msgstr ""
+"Project-Id-Version: Webdigit - Library 1.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/webdigit-library\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2022-05-27T10:19:14+02:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.6.0\n"
+"X-Domain: webdigit-library\n"
+
+#. Plugin Name of the plugin
+msgid "Webdigit - Library"
+msgstr ""
+
+#. Description of the plugin
+msgid "Permet de partager des documents"
+msgstr ""
+
+#. Author of the plugin
+msgid "Webdigit"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "https://www.webdigit.be"
+msgstr ""
+
+#: includes/menuPages.php:6
+#: includes/menuPages.php:7
+msgid "Library"
+msgstr ""
+
+#: includes/menuPages.php:16
+#: includes/menuPages.php:17
+msgid "Categories"
+msgstr ""
+
+#: includes/menuPages.php:24
+#: includes/menuPages.php:25
+msgid "Files"
+msgstr ""
+
+#: includes/menuPages.php:32
+#: includes/menuPages.php:33
+msgid "Stats"
+msgstr ""
+
+#: includes/menuPages.php:40
+#: includes/menuPages.php:41
+msgid "Settings"
+msgstr ""
+
+#: render-library.php:11
+msgid "You don't have access to this page"
+msgstr ""
+
+#: render-library.php:37
+msgid "Element requested :"
+msgstr ""
