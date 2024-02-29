@@ -10,6 +10,11 @@
 	exit;
 }
 
+/**
+ * Class WDLB_Library_Initializer
+ *
+ * This class is responsible for initializing the library plugin.
+ */
 class WDLB_Library_Initializer {
     private static $instance;
 
@@ -32,17 +37,22 @@ class WDLB_Library_Initializer {
         'version' => '1.0'
     );
 
-    public function __construct() {
-        $this->define_constants();
+	/**
+	 * Class WDLB_Library_Initializer
+	 * 
+	 * This class initializes the library plugin by defining constants, retrieving options, and adding necessary actions.
+	 */
+	public function __construct() {
+		$this->define_constants();
 
-        foreach ( $this->options as $key => $value ) {
+		foreach ( $this->options as $key => $value ) {
 			$this->options[ $key ] = get_option( $key );
 		}
 
-        add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
 		add_action( 'admin_menu', array( $this, 'add_admin_menu' ) );
-    }
+	}
 
     /**
 	 * Get the plugin version.
@@ -113,9 +123,15 @@ class WDLB_Library_Initializer {
 	 */
 	private function includes() {
         include_once WD_LIBRARY_PATH . 'includes/categories/class-wdlb-categories.php';
+		include_once WD_LIBRARY_PATH . 'includes/categories/wdlb-config-categories.php';
         include_once WD_LIBRARY_PATH . 'includes/stats/class-wdlb-stats.php';
         include_once WD_LIBRARY_PATH . 'includes/link_files/class-wdlb-link-files.php';
+		include_once WD_LIBRARY_PATH . 'includes/class-wdlb-admin-notices.php';
+
 		// Settings Tabs.
+		include_once WD_LIBRARY_PATH . 'includes/wdlb-config.php';
+		include_once WD_LIBRARY_PATH . 'includes/config/wdlb-config-settings-init.php';
+		include_once WD_LIBRARY_PATH . 'includes/config/wdlb-config-settings.php';
 	}
     
 	/**
@@ -162,7 +178,7 @@ class WDLB_Library_Initializer {
 	 * @return void
 	 */
 	public function load_textdomain() {
-		load_plugin_textdomain( 'webdigit-chatbot', false, dirname( WD_LIBRARY_BASENAME ) . '/languages/' );
+		load_plugin_textdomain( 'webdigit-library', false, dirname( WD_LIBRARY_BASENAME ) . '/languages/' );
 	}
 
     /**
@@ -172,38 +188,66 @@ class WDLB_Library_Initializer {
 	 */
 	public function add_admin_menu() {
         add_menu_page(
-            __('Library','webdigit-library'),
-            __('Library', 'webdigit-library'),
+            'Library',
+            'Library',
             'manage_options',
-            'webdigit-library',
-            'webdigit_library_files',
+            'wdlb',
+            array( $this, 'wdlb_callback' ),
             WD_LIBRARY_URL . '/assets/img/icon.png',
             20
         );
         add_submenu_page(
-            'webdigit-library',
-            __('Catégories', 'webdigit-library'),
-            __('Catégories', 'webdigit-library'),
+            'wdlb',
+            'Catégories',
+            'Catégories',
             'manage_options',
-            'webdigit-library-categories',
-            'webdigit_library_categories'
+            'wdlb_categories',
+            array( $this, 'wdlb_categories_callback' ),
         );
         add_submenu_page(
-            'webdigit-library',
-            __('Statistiques', 'webdigit-library'),
-            __('Statistiques', 'webdigit-library'),
+            'wdlb',
+            'Stats',
+            'Stats',
             'manage_options',
-            'webdigit-library-stats',
-            'webdigit_library_stats'
+            'wdlb_stats',
+            array( $this, 'wdlb_stats_callback' )
         );
         add_submenu_page(
-            'webdigit-library',
-            __('Paramètres', 'webdigit-library'),
-            __('Paramètres', 'webdigit-library'),
+            'wdlb',
+            'Settings',
+            'Settings',
             'manage_options',
-            'webdigit-library-settings',
-            'webdigit_library_settings'
+            'wdlb_settings',
+			array( $this, 'wdlb_settings_callback' )
         );
+	}
+
+	/**
+	 * Callback for admin main menu.
+	 */
+	public function wdlb_callback() {
+		wdlb_config_form();
+	}
+
+	/**
+	 * Callback for admin settings menu.
+	 */
+	public function wdlb_settings_callback() {
+		wdlb_config_form();
+	}
+
+	/**
+	 * Callback for admin stats menu.
+	 */
+	public function wdlb_stats_callback() {
+		// wdlb_config_form();
+	}
+
+	/**
+	 * Callback for admin categories menu.
+	 */
+	public function wdlb_categories_callback() {
+		wdlb_manage_categories();
 	}
     
 }

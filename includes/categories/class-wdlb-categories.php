@@ -32,7 +32,7 @@ class WDLB_Categories {
 	/**
 	 * Constructor.
 	 */
-	private function __construct() {
+	public function __construct() {
 		global $wpdb;
 		$this->wpdb                = $wpdb;
 		$this->table_name          = $wpdb->prefix . 'wdlb_library_categories';
@@ -80,7 +80,8 @@ class WDLB_Categories {
 	 */
 	public function insert_categories( $datas ) {
 		$now = current_time( 'mysql' );
-		$this->wpdb->insert(
+
+		$result = $this->wpdb->insert(
 			$this->table_name,
 			array(
 				'category_name' => $datas['category_name'],
@@ -89,5 +90,86 @@ class WDLB_Categories {
 				'created_at'    => $now,
 			)
 		);
+
+		if (false === $result) {
+            new WDLB_Admin_Notices( 1, __( 'Erreur lors de l\'ajout de la catégorie !', 'webdigit-library' ) );
+        } else {
+            new WDLB_Admin_Notices( 2, __( 'Catégorie ajoutée avec succès !', 'webdigit-library' ) );
+        }
 	}
+
+	/**
+	 * Retrieves all categories from the database.
+	 *
+	 * @return array The array of categories.
+	 */
+	public function get_categories() {
+		$categories = $this->wpdb->get_results( "SELECT * FROM $this->table_name" );
+		return $categories;
+	}
+
+	/**
+	 * Deletes a category by its ID.
+	 *
+	 * @param int $id The ID of the category to delete.
+	 * @return void
+	 */
+	public function delete_category( $id ) {
+		$result = $this->wpdb->delete(
+			$this->table_name,
+			array( 'id' => $id )
+		);
+
+		if (false === $result) {
+			new WDLB_Admin_Notices( 1, __( 'Erreur lors de la suppression de la catégorie !', 'webdigit-library' ) );
+		} else {
+			new WDLB_Admin_Notices( 2, __( 'Catégorie supprimée avec succès !', 'webdigit-library' ) );
+		}
+	}
+
+	/**
+	 * Retrieves a category by its ID.
+	 *
+	 * @param int $id The ID of the category to retrieve.
+	 * @return object|null The category object if found, null otherwise.
+	 */
+	public function get_category( $id ) {
+		$category = $this->wpdb->get_row( "SELECT * FROM $this->table_name WHERE id = $id" );
+		
+		if (null === $category) {
+			new WDLB_Admin_Notices( 1, __( 'Catégorie non trouvée !', 'webdigit-library' ) );
+			return null;
+		}
+
+		return $category;
+	}
+
+	/**
+	 * Update a category with the provided data.
+	 *
+	 * @param array $datas The data to update the category with.
+	 *                    - category_name (string): The new name of the category.
+	 *                    - image_url (string): The new image URL of the category.
+	 *                    - email_link (string): The new email link of the category.
+	 *                    - id (int): The ID of the category to update.
+	 * @return void
+	 */
+	public function update_category( $datas ) {
+		$result = $this->wpdb->update(
+			$this->table_name,
+			array(
+				'category_name' => $datas['category_name'],
+				'image_url'     => $datas['image_url'],
+				'email_link'    => $datas['email_link'],
+			),
+			array( 'id' => $datas['id'] )
+		);
+
+		if (false === $result) {
+			new WDLB_Admin_Notices( 1, __( 'Erreur lors de la mise à jour de la catégorie !', 'webdigit-library' ) );
+		} else {
+			new WDLB_Admin_Notices( 2, __( 'Catégorie mise à jour avec succès !', 'webdigit-library' ) );
+		}
+	}
+
 }

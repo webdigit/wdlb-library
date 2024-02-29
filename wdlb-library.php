@@ -15,6 +15,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 require_once __DIR__ . '/vendor/autoload.php';
 require_once __DIR__ . '/class-wdlb-library-initializer.php';
 
+/**
+ * Returns the instance of the WDLB_Library_Initializer class.
+ *
+ * @return WDLB_Library_Initializer The instance of the WDLB_Library_Initializer class.
+ */
 function wdlb_library() {
     static $instance;
     if ( null === $instance || ($instance instanceof WDLB_Library_Initializer) ) {
