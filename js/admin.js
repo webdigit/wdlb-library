@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", function() {
     getImages();
     getDocuments();
+    toggleFields();
 });
 
 const getImages = () => {
@@ -79,5 +80,30 @@ const getDocuments = () => {
         });
     
         customUploader.open();
+    });
+}
+
+const  toggleFields = () => {
+    var linkField = document.getElementById('toggleLinkField');
+    var documentUrlField = document.getElementById('toggleDocField');
+
+    var toggleButton = document.getElementById('toggleFields');
+    linkField.classList.toggle('hidden');
+
+    toggleButton.addEventListener('click', function() {
+        if (linkField.classList.contains('hidden')) {
+            linkField.classList.toggle('hidden');
+            documentUrlField.classList.toggle('hidden');
+            document.getElementById('document_url').value = '';
+            toggleButton.innerText = 'Encoder une ressource';
+        } else {
+            const linkinput = document.getElementById('link');
+            documentUrlField.classList.toggle('hidden');
+            linkField.classList.toggle('hidden');
+            // ajoute required sur #link
+
+            linkinput.value = '';
+            toggleButton.innerText = 'Encoder un lien';
+        }
     });
 }

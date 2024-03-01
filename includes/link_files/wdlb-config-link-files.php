@@ -58,20 +58,24 @@ function wdlb_manage_linked_files() {
                     <option value="<?php echo $category->id; ?>" <?php echo $selected ? 'selected' : ''; ?>><?php echo $category->category_name; ?></option>
                 <?php endforeach; ?>
             </select><br>
-            <label>Lien:</label>
-            <input type="text" id="link" name="link" value="<?php echo isset($file_to_edit) ? $file_to_edit->link : ''; ?>"><br>
+            <label for="image_url">Image couverture:</label>
+            <input type="text" id="image_url" name="img_couv" value="<?php echo isset($file_to_edit) ? $file_to_edit->img_couv : ''; ?>" style="display:none;">
+            <a href="#" id="select_image">Sélectionner une image de couverture</a>
+            <div id="image_preview">
+                <?php if (isset($file_to_edit) && $file_to_edit->img_couv): ?>
+                    <img src="<?php echo $file_to_edit->img_couv; ?>" width="50" height="50" alt="">
+                <?php endif; ?>
+            </div><br>
 
-                <label for="image_url">Image couverture:</label>
-                <input type="text" id="image_url" name="img_couv" value="<?php echo isset($file_to_edit) ? $file_to_edit->img_couv : ''; ?>" style="display:none;">
-                <a href="#" id="select_image">Sélectionner une image de couverture</a>
-                <div id="image_preview">
-                    <?php if (isset($file_to_edit) && $file_to_edit->img_couv): ?>
-                        <img src="<?php echo $file_to_edit->img_couv; ?>" width="50" height="50" alt="">
-                    <?php endif; ?>
-                </div><br>
+            <button type="button" id="toggleFields">Encoder un lien</button>
+            <div id="toggleLinkField">
+                <label>Lien:</label>
+                <input type="text" id="link" name="link" value="<?php echo isset($file_to_edit) ? $file_to_edit->link : ''; ?>"><br>
+            </div>
 
+            <div id="toggleDocField">
                 <label for="document_url">Ressource:</label>
-                <input type="text" id="document_url" name="document_url" value="<?php echo isset($file_to_edit) ? $file_to_edit->document_url : ''; ?>" style="display:none;">
+                <input type="hidden" id="document_url" name="document_url" value="<?php echo isset($file_to_edit) ? $file_to_edit->document_url : ''; ?>">
                 <a href="#" id="select_document_url">Sélectionner une ressource</a>
                 <div id="document_url_preview">
                     <?php if (isset($file_to_edit) && $file_to_edit->document_url): ?>
@@ -79,11 +83,11 @@ function wdlb_manage_linked_files() {
                         <a href="<?php echo $file_to_edit->document_url; ?>" target="_blank"><img src="<?php echo $thumbnail; ?>" width="50" height="50" alt=""></a>
                     <?php endif; ?>
                 </div><br>
-
-                <input type="submit" name="wdlb_submit_file" value="<?php echo isset($file_to_edit) ? 'Enregistrer les modifications' : 'Ajouter le fichier'; ?>">
-                <?php if (isset($file_to_edit)) : ?>
-                    <a href="<?php echo admin_url('admin.php?page=wdlb'); ?>" class="button">Annuler</a>
-                <?php endif; ?>
+            </div>
+            <input type="submit" name="wdlb_submit_file" value="<?php echo isset($file_to_edit) ? 'Enregistrer les modifications' : 'Ajouter le fichier'; ?>">
+            <?php if (isset($file_to_edit)) : ?>
+                <a href="<?php echo admin_url('admin.php?page=wdlb'); ?>" class="button">Annuler</a>
+            <?php endif; ?>
         </form>
         
         <!-- Tableau pour afficher la liste des fichiers liés -->
@@ -106,9 +110,10 @@ function wdlb_manage_linked_files() {
                         <td><?php echo $file->desc_text; ?></td>
                         <td><?php echo wdlb_get_category_names($file->category_id); ?></td>
                         <td><?php if ($file->img_couv): ?><img src="<?php echo $file->img_couv; ?>" width="50" height="50" alt=""><?php endif; ?></td>
-                        <td><?php if ($file->document_url): ?>
-                                <?php $ressource_url = isset($file->document_url)? $file->document_url : $file->link; ?>
-                                <a href="<?php echo $ressource_url; ?>" target="_blank">Voir la ressource</a>
+                        <td><?php if ($file->document_url || $file->link): ?>
+                                <?php $ressource_url = isset($file->document_url) && strlen($file->document_url) ? $file->document_url : $file->link; ?>
+                                
+                                <a href="<?php echo $ressource_url; ?>" target="_blank">Voir la ressource <?php if(isset($file->document_url) && strlen($file->document_url) ): ?> (file) <?php else: ?> (link) <?php endif; ?></a>
                             <?php endif; ?>
                         </td>
                         <td><?php echo $file->created_at; ?></td>
