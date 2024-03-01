@@ -126,6 +126,7 @@ class WDLB_Library_Initializer {
 		include_once WD_LIBRARY_PATH . 'includes/categories/wdlb-config-categories.php';
         include_once WD_LIBRARY_PATH . 'includes/stats/class-wdlb-stats.php';
         include_once WD_LIBRARY_PATH . 'includes/link_files/class-wdlb-link-files.php';
+        include_once WD_LIBRARY_PATH . 'includes/link_files/wdlb-config-link-files.php';
 		include_once WD_LIBRARY_PATH . 'includes/class-wdlb-admin-notices.php';
 
 		// Settings Tabs.
@@ -192,7 +193,7 @@ class WDLB_Library_Initializer {
             'Library',
             'manage_options',
             'wdlb',
-            array( $this, 'wdlb_callback' ),
+            array( $this, 'wdlb_link_files_callback' ),
             WD_LIBRARY_URL . '/assets/img/icon.png',
             20
         );
@@ -225,8 +226,8 @@ class WDLB_Library_Initializer {
 	/**
 	 * Callback for admin main menu.
 	 */
-	public function wdlb_callback() {
-		wdlb_config_form();
+	public function wdlb_link_files_callback() {
+		wdlb_manage_linked_files();
 	}
 
 	/**
