@@ -59,6 +59,7 @@ class WDLB_Categories {
 		$sql             = "CREATE TABLE $this->table_name (
 			id mediumint(9) NOT NULL AUTO_INCREMENT,
 			category_name text NOT NULL,
+			parent_id mediumint(9),
 			image_url text,
 			email_link text,
 			created_at datetime DEFAULT CURRENT_TIMESTAMP NOT NULL,
@@ -87,6 +88,7 @@ class WDLB_Categories {
 				'category_name' => $datas['category_name'],
 				'image_url'     => $datas['image_url'],
 				'email_link'    => $datas['email_link'],
+				'parent_id'     => $datas['parent_id'],
 				'created_at'    => $now,
 			)
 		);
@@ -135,7 +137,7 @@ class WDLB_Categories {
 	 */
 	public function get_category( $id ) {
 		$category = $this->wpdb->get_row( "SELECT * FROM $this->table_name WHERE id = $id" );
-		
+
 		if (null === $category) {
 			new WDLB_Admin_Notices( 1, __( 'Catégorie non trouvée !', 'webdigit-library' ) );
 			return null;
@@ -161,6 +163,7 @@ class WDLB_Categories {
 				'category_name' => $datas['category_name'],
 				'image_url'     => $datas['image_url'],
 				'email_link'    => $datas['email_link'],
+				'parent_id'     => $datas['parent_id'],
 			),
 			array( 'id' => $datas['id'] )
 		);

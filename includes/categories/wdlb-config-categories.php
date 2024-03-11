@@ -35,7 +35,7 @@ function wdlb_manage_categories() {
     <div class="wdlb-container">
         <div class="wrapper">
             <h2>Gérer les catégories</h2>
-            
+
             <!-- Formulaire pour ajouter ou modifier une catégorie -->
             <form method="post" class="wdlb-form">
                 <?php wp_nonce_field( 'wdlb_manage_categories_action', 'wdlb_manage_categories_nonce' ); ?>
@@ -48,6 +48,13 @@ function wdlb_manage_categories() {
                     <input type="text" name="email_link" placeholder="<?php _e('Séparez les email par ;', 'webdigit-library') ?>" value="<?php echo isset($category_to_edit) ? $category_to_edit->email_link : ''; ?>">
                 </div>
                 <div class="input-wrapper">
+                    <label>Catégorie parente:</label>
+                    <select name="parent_category">
+                        <option value="0">Aucune</option>
+                        <?php foreach ($categories as $category): ?>
+                            <option value="<?php echo $category->id; ?>" <?php echo isset($category_to_edit) && $category_to_edit->parent_id === $category->id ? 'selected' : ''; ?>><?php echo $category->category_name; ?></option>
+                        <?php endforeach; ?>
+                    </select>
                     <label for="image_url" style="display:none;">URL de l'image:</label>
                     <input type="text" id="image_url" value="<?php echo isset($category_to_edit) ? $category_to_edit->image_url : ''; ?>" name="image_url" style="display:none;">
                     <input type="hidden" id="image_id" name="image_id"><br>
@@ -67,6 +74,7 @@ function wdlb_manage_categories() {
                 <tr>
                     <th>Nom</th>
                     <th>Image</th>
+                    <th>Parent</th>
                     <th>Email</th>
                     <th>Date de création</th>
                     <th>Actions</th> <!-- Nouvelle colonne pour les actions -->
@@ -74,9 +82,17 @@ function wdlb_manage_categories() {
             </thead>
             <tbody>
                 <?php foreach ($categories as $category) : ?>
+                <?php
+                    if ($category->parent_id == 0) {
+                        $parentCategory = '-';
+                    } else {
+                        $parentCategory = wdlb_get_category($category->parent_id)->category_name;
+                    }
+                ?>
                     <tr>
                         <td><?php echo $category->category_name; ?></td>
                         <td><?php if ($category->image_url): ?><img src="<?php echo $category->image_url; ?>" width="50" height="50" alt=""><?php endif; ?></td>
+                        <td><?php echo $parentCategory; ?></td>
                         <td><?php echo $category->email_link; ?></td>
                         <td><?php echo $category->created_at; ?></td>
                         <td>
@@ -110,12 +126,14 @@ function wdlb_add_categories($datas) {
     $category_name = sanitize_text_field($datas['category_name']);
     $image_url = esc_url($datas['image_url']);
     $email_link = sanitize_email($datas['email_link']);
+    $parent_id = intval($datas['parent_category']);
 
     $categories_manager->insert_categories(
         array(
             'category_name' => $category_name,
             'image_url' => $image_url,
-            'email_link' => $email_link
+            'email_link' => $email_link,
+            'parent_id' => $parent_id
         )
     );
 }
@@ -136,6 +154,7 @@ function wdlb_edit_category($datas) {
     $category_id = intval($datas['category_id']);
     $category_name = sanitize_text_field($datas['category_name']);
     $email_link = sanitize_email($datas['email_link']);
+    $parent_id = intval($datas['parent_category']);
 
     if(isset($datas['image_url']) && !empty($datas['image_url'])) {
         $image_url = esc_url($datas['image_url']);
@@ -149,7 +168,8 @@ function wdlb_edit_category($datas) {
             'id' => $category_id,
             'category_name' => $category_name,
             'image_url' => $image_url,
-            'email_link' => $email_link
+            'email_link' => $email_link,
+            'parent_id' => $parent_id
         )
     );
 }
