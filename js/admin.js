@@ -78,13 +78,16 @@ const getDocuments = () => {
             const documentPreview = document.getElementById('document_url_preview');
             documentPreview.innerHTML = '<a href="' + attachment.url + '" target="_blank"><img src="' + thumbnail + '" width="50" height="50" alt=""></a>';
         });
-    
+
         customUploader.open();
     });
 }
 
 const  toggleFields = () => {
     var linkField = document.getElementById('toggleLinkField');
+
+    if (!linkField) return;
+
     var documentUrlField = document.getElementById('toggleDocField');
 
     var toggleButton = document.getElementById('toggleFields');
