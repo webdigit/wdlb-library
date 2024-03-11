@@ -20,7 +20,12 @@ function wdlb_general_settings_save_option( $option_name ) {
 		wp_die( 'Security check failed' );
 	}
 
-	$opt_name_sanitize = isset( $_POST[ $option_name ] ) ? sanitize_text_field( wp_unslash( $_POST[ $option_name ] ) ) : '';
+	if (is_array($_POST[ $option_name ])) {
+	   $opt_name_sanitize = isset( $_POST[ $option_name ] ) ? json_encode($_POST[ $option_name ]) : '';
+	} else {
+	   $opt_name_sanitize = isset( $_POST[ $option_name ] ) ? sanitize_text_field( wp_unslash( $_POST[ $option_name ] ) ) : '';
+	}
+
 	update_option( $option_name, $opt_name_sanitize );
 }
 
@@ -29,6 +34,7 @@ function wdlb_general_settings_save_option( $option_name ) {
  */
 function wdlb_general_settings_save_options() {
     wdlb_general_settings_save_option( 'wd_lib_limit_dl' );
+    wdlb_general_settings_save_option( 'wd_lib_auth_roles' );
     wdlb_general_settings_save_option( 'wd_lib_active_search' );
     wdlb_general_settings_save_option( 'wd_lib_admin_mails' );
     wdlb_general_settings_save_option( 'wd_lib_mail_title' );
@@ -46,9 +52,42 @@ function wdlb_settings_section_callback() {
 	}
 	?>
 		<?php wp_nonce_field( 'wdlb_settings', 'wdlb_settings_nonce' ); ?>
-		
+
 		<table class="form-table">
 
+		<tr>
+            <th scope="row">
+            <?php
+                esc_html_e(
+                'Authorised Roles:',
+                'webdigit-library'
+                );
+            ?>
+            </th>
+            <td>
+                <?php
+                    $roles = get_editable_roles();
+                    $auth_roles = json_decode(get_option( 'wd_lib_auth_roles' ));
+                ?>
+                <?php foreach ($roles as $role) : ?>
+                    <?php
+                        $checked = false;
+                        if ( isset($auth_roles) && is_array($auth_roles) && count($auth_roles) > 0) {
+                            foreach ($auth_roles as $auth_role) {
+                                if ($role['name'] === $auth_role) {
+                                    $checked = true;
+                                    break;
+                                }
+                            }
+                        }
+                    ?>
+                    <label>
+                        <input type="checkbox" name="wd_lib_auth_roles[]" value="<?php echo $role['name']; ?>" <?php echo $checked ? 'checked' : ''; ?>>
+                        <?php echo $role['name']; ?>
+                    </label><br>
+                <?php endforeach; ?>
+            </td>
+        </tr>
         <tr>
 			<th scope="row">
 			<?php
@@ -78,14 +117,55 @@ function wdlb_settings_section_callback() {
                 <input type="text" name="wd_lib_limit_dl" value="<?php echo esc_attr( get_option( 'wd_lib_limit_dl', '0' ) ); ?>" />
             </td>
 		</tr>
+		<tr valign="top">
+			<th scope="row">
+                <?php
+                    esc_html_e(
+                        'Recipients mails:',
+                        'webdigit-library'
+                    );
+                ?>
+			</th>
+			<td>
+                <input type="text" name="wd_lib_admin_mails" value="<?php echo esc_attr( get_option( 'wd_lib_admin_mails', '' ) ); ?>" />
+            </td>
+		</tr>
+		<tr valign="top">
+			<th scope="row">
+                <?php
+                    esc_html_e(
+                        'Email title:',
+                        'webdigit-library'
+                    );
+                ?>
+			</th>
+			<td>
+                <input type="text" name="wd_lib_mail_title" value="<?php echo esc_attr( get_option( 'wd_lib_mail_title', '' ) ); ?>" />
+            </td>
+		</tr>
+		<tr valign="top">
+			<th scope="row">
+                <?php
+                    esc_html_e(
+                        'Email content:',
+                        'webdigit-library'
+                    );
+                ?>
+			</th>
+			<td>
+			    <?php
+					wp_editor(stripslashes(get_option('wd_lib_mail_message')), 'wd_lib_mail_message', ['textarea_name' => 'wd_lib_mail_message']);
+				?>
+            </td>
+		</tr>
 		</table>
-		<td><input type='submit' name='submit' value='
+		<input type='submit' name='submit' value='
             <?php
                 esc_html_e(
                     'Save Changes',
                     'webdigit-library'
                 );
             ?>
-		' class='button button-primary' /></td>
+		' class='button button-primary' />
 	<?php
 }

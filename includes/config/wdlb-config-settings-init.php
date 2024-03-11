@@ -21,6 +21,7 @@ function wdlb_settings_initialization() {
 	 */
 
 	register_setting( 'wdlb_settings', 'wd_lib_limit_dl' );
+	register_setting( 'wdlb_settings', 'wd_lib_auth_roles' );
 	register_setting( 'wdlb_settings', 'wd_lib_active_search' );
 	register_setting( 'wdlb_settings', 'wd_lib_admin_mails' );
 	register_setting( 'wdlb_settings', 'wd_lib_mail_title' );
