@@ -17,6 +17,7 @@
 
 /* Style des champs */
 .wdlb-form input[type="text"],
+.wdlb-form input[type="checkbox"],
 .wdlb-form input[type="email"] {
     width: 100%;
     padding: 10px;
@@ -24,6 +25,10 @@
     border: 1px solid #ccc;
     border-radius: 5px;
     box-sizing: border-box;
+}
+
+.wdlb-form input[type="checkbox"] {
+    width: inherit;
 }
 
 /* Style des boutons */

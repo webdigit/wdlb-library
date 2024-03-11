@@ -28,68 +28,80 @@ function wdlb_manage_linked_files() {
     }
 
     ?>
-    <div class="wrap">
-        <h2>Gérer les fichiers liés</h2>
-        
-        <!-- Formulaire pour ajouter ou modifier un fichier lié -->
-        <form method="post">
-            <?php wp_nonce_field( 'wdlb_manage_linked_files_action', 'wdlb_manage_linked_files_nonce' ); ?>
-            <input type="hidden" name="wdlb_action" value="<?php echo isset($file_to_edit) ? 'edit' : 'add'; ?>">
-            <input type="hidden" name="file_id" value="<?php echo isset($file_to_edit) ? $file_to_edit->id : ''; ?>">
-            <input type="hidden" id="document_id" name="post_id" value="<?php echo isset($file_to_edit) ? $file_to_edit->post_id : ''; ?>">
-            <label>Name:</label>
-            <input type="text" name="name" value="<?php echo isset($file_to_edit) ? $file_to_edit->name : ''; ?>" required><br>
-            <label>Description:</label>
-            <input type="text" name="desc_text" value="<?php echo isset($file_to_edit) ? $file_to_edit->desc_text : ''; ?>"><br>
-            <label>Catégorie:</label>
-            <select name="category_id[]" multiple>
-                <?php foreach ($categories as $category) : ?>
-                    <?php
-                    $selected = false;
-                    if (isset($file_to_edit) && isset($file_to_edit->category_id)) {
-                        foreach ($file_to_edit->category_id as $cat_id) {
-                            if ($cat_id == $category->id) {
-                                $selected = true;
-                                break;
+    <div class="wdlb-container">
+        <div class="wrapper">
+            <h2>Gérer les fichiers liés</h2>
+
+            <!-- Formulaire pour ajouter ou modifier un fichier lié -->
+            <form method="post" class="wdlb-form">
+                <?php wp_nonce_field( 'wdlb_manage_linked_files_action', 'wdlb_manage_linked_files_nonce' ); ?>
+                <input type="hidden" name="wdlb_action" value="<?php echo isset($file_to_edit) ? 'edit' : 'add'; ?>">
+                <input type="hidden" name="file_id" value="<?php echo isset($file_to_edit) ? $file_to_edit->id : ''; ?>">
+                <input type="hidden" id="document_id" name="post_id" value="<?php echo isset($file_to_edit) ? $file_to_edit->post_id : ''; ?>">
+                <div class="input-wrapper">
+                    <label>Name:</label>
+                    <input type="text" name="name" value="<?php echo isset($file_to_edit) ? $file_to_edit->name : ''; ?>" required><br>
+                    <label>Description:</label>
+                    <input type="text" name="desc_text" value="<?php echo isset($file_to_edit) ? $file_to_edit->desc_text : ''; ?>"><br>
+                </div>
+                <div class="input-wrapper">
+                    <label>Catégorie:</label><br>
+                    <?php foreach ($categories as $category) : ?>
+                        <?php
+                            $checked = false;
+                            if ( isset($file_to_edit) && ($file_to_edit->category_id &&isset($file_to_edit->category_id))) {
+                                foreach ($file_to_edit->category_id as $cat_id) {
+                                    if ($cat_id == $category->id) {
+                                        $checked = true;
+                                        break;
+                                    }
+                                }
                             }
-                        }
-                    }
-                    ?>
-                    <option value="<?php echo $category->id; ?>" <?php echo $selected ? 'selected' : ''; ?>><?php echo $category->category_name; ?></option>
-                <?php endforeach; ?>
-            </select><br>
-            <label for="image_url">Image couverture:</label>
-            <input type="text" id="image_url" name="img_couv" value="<?php echo isset($file_to_edit) ? $file_to_edit->img_couv : ''; ?>" style="display:none;">
-            <a href="#" id="select_image">Sélectionner une image de couverture</a>
-            <div id="image_preview">
-                <?php if (isset($file_to_edit) && $file_to_edit->img_couv): ?>
-                    <img src="<?php echo $file_to_edit->img_couv; ?>" width="50" height="50" alt="">
-                <?php endif; ?>
-            </div><br>
+                        ?>
+                        <label>
+                            <input type="checkbox" name="category_id[]" value="<?php echo $category->id; ?>" <?php echo $checked ? 'checked' : ''; ?>>
+                            <?php echo $category->category_name; ?>
+                        </label><br>
+                    <?php endforeach; ?>
 
-            <button type="button" id="toggleFields">Encoder un lien</button>
-            <div id="toggleLinkField">
-                <label>Lien:</label>
-                <input type="text" id="link" name="link" value="<?php echo isset($file_to_edit) ? $file_to_edit->link : ''; ?>"><br>
-            </div>
+                    <br>
+                </div>
+                <div class="input-wrapper">
+                    <label for="image_url">Image couverture:</label>
+                    <input type="text" id="image_url" name="img_couv" value="<?php echo isset($file_to_edit) ? $file_to_edit->img_couv : ''; ?>" style="display:none;">
+                    <a href="#" id="select_image">Sélectionner une image de couverture</a>
+                    <div id="image_preview">
+                        <?php if (isset($file_to_edit) && $file_to_edit->img_couv): ?>
+                            <img src="<?php echo $file_to_edit->img_couv; ?>" width="50" height="50" alt="">
+                        <?php endif; ?>
+                    </div><br>
 
-            <div id="toggleDocField">
-                <label for="document_url">Ressource:</label>
-                <input type="hidden" id="document_url" name="document_url" value="<?php echo isset($file_to_edit) ? $file_to_edit->document_url : ''; ?>">
-                <a href="#" id="select_document_url">Sélectionner une ressource</a>
-                <div id="document_url_preview">
-                    <?php if (isset($file_to_edit) && $file_to_edit->document_url): ?>
-                        <?php $thumbnail = str_replace('.pdf', '-pdf.jpg', $file_to_edit->document_url); ?>
-                        <a href="<?php echo $file_to_edit->document_url; ?>" target="_blank"><img src="<?php echo $thumbnail; ?>" width="50" height="50" alt=""></a>
+                    <button type="button" id="toggleFields" class="button">Encoder un lien</button>
+                    <div id="toggleLinkField">
+                        <label>Lien:</label>
+                        <input type="text" id="link" name="link" value="<?php echo isset($file_to_edit) ? $file_to_edit->link : ''; ?>"><br>
+                    </div>
+
+                    <div id="toggleDocField">
+                        <label for="document_url">Ressource:</label>
+                        <input type="hidden" id="document_url" name="document_url" value="<?php echo isset($file_to_edit) ? $file_to_edit->document_url : ''; ?>">
+                        <a href="#" id="select_document_url">Sélectionner une ressource</a>
+                        <div id="document_url_preview">
+                            <?php if (isset($file_to_edit) && $file_to_edit->document_url): ?>
+                                <?php $thumbnail = str_replace('.pdf', '-pdf.jpg', $file_to_edit->document_url); ?>
+                                <a href="<?php echo $file_to_edit->document_url; ?>" target="_blank"><img src="<?php echo $thumbnail; ?>" width="50" height="50" alt=""></a>
+                            <?php endif; ?>
+                        </div><br>
+                    </div>
+                    <input type="submit" name="wdlb_submit_file" value="<?php echo isset($file_to_edit) ? 'Enregistrer les modifications' : 'Ajouter le fichier'; ?>">
+                    <?php if (isset($file_to_edit)) : ?>
+                        <a href="<?php echo admin_url('admin.php?page=wdlb'); ?>" class="button">Annuler</a>
                     <?php endif; ?>
-                </div><br>
-            </div>
-            <input type="submit" name="wdlb_submit_file" value="<?php echo isset($file_to_edit) ? 'Enregistrer les modifications' : 'Ajouter le fichier'; ?>">
-            <?php if (isset($file_to_edit)) : ?>
-                <a href="<?php echo admin_url('admin.php?page=wdlb'); ?>" class="button">Annuler</a>
-            <?php endif; ?>
-        </form>
-        
+                </div>
+            </form>
+        </div>
+    </div>
+
         <!-- Tableau pour afficher la liste des fichiers liés -->
         <table class="wp-list-table widefat fixed striped">
             <thead>
@@ -129,7 +141,6 @@ function wdlb_manage_linked_files() {
                 <?php endforeach; ?>
             </tbody>
         </table>
-    </div>
     <?php
 }
 
@@ -141,7 +152,7 @@ function wdlb_get_linked_file($id) {
 function wdlb_get_all_files() {
     $linked_files_manager = new WDLB_Linkfiles();
     return $linked_files_manager->get_all_link_files();
-}   
+}
 
 function wdlb_add_linked_file($datas) {
     $linked_files_manager = new WDLB_Linkfiles();
@@ -181,4 +192,3 @@ function wdlb_get_category_names($category_ids) {
     }
     return implode(', ', $category_names);
 }
-
