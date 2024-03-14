@@ -32,7 +32,6 @@ add_shortcode('wdlb_library', 'wdlb_render_library');
 
 function get_library_header() {
     $header = '<div id="wdlb-header">';
-    $header .= '<h1>' . __('Library', 'webdigit-library') . '</h1>';
     $header .= '<div id="wdlb-header-infos">';
     $header .= create_limation_info(get_limitation());
     $header .= create_request_validation_button();
