@@ -77,7 +77,7 @@ function get_library_content () {
     $contents = $library_manager->get_all_link_files();
 
     if(!count($contents)) {
-        return 'No Content Found';
+        return _e('No content Found', 'webdigit-library');
     }
 
     return create_content($contents);

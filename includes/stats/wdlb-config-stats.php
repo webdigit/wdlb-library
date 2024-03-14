@@ -14,19 +14,19 @@ function wdlb_display_stats () {
  ?>
     <div class="wdlb-container">
         <div class="wrapper">
-            <h2>Gérer les catégories</h2>
+            <h2><?php _e( 'Request Log', 'webdigit-library' ); ?></h2>
                 <table class="wp-list-table widefat fixed striped">
                     <thead>
                         <tr>
-                            <th>Ressource name</th>
-                            <th>Email</th>
-                            <th>Request Date</th>
+                            <th><?php _e( 'Requested Ressources', 'webdigit-library' ); ?></th>
+                            <th><?php _e( 'Requested by', 'webdigit-library' ); ?></th>
+                            <th><?php _e( 'Request date', 'webdigit-library' ); ?></th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php if (empty($stats)) : ?>
                             <tr>
-                                <td colspan="3" style="text-align: center;"> No Stats </td>
+                                <td colspan="3" style="text-align: center;"> <?php _e( 'No logs', 'webdigit-library' ); ?> </td>
                             </tr>
                         <?php endif; ?>
                         <?php foreach ($stats as $stat) : ?>

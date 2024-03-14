@@ -34,7 +34,7 @@ function wdlb_manage_categories() {
     ?>
     <div class="wdlb-container">
         <div class="wrapper">
-            <h2>Gérer les catégories</h2>
+            <h2><?php _e( 'Manage categories', 'webdigit-library' ); ?></h2>
 
             <!-- Formulaire pour ajouter ou modifier une catégorie -->
             <form method="post" class="wdlb-form">
@@ -42,23 +42,23 @@ function wdlb_manage_categories() {
                 <input type="hidden" name="wdlb_action" value="<?php echo isset($category_to_edit) ? 'edit' : 'add'; ?>">
                 <input type="hidden" name="category_id" value="<?php echo isset($category_to_edit) ? $category_to_edit->id : ''; ?>">
                 <div class="input-wrapper">
-                    <label>Nom de la catégorie:</label>
+                    <label><?php _e( 'Category name', 'webdigit-library' ); ?></label>
                     <input type="text" name="category_name" value="<?php echo isset($category_to_edit) ? $category_to_edit->category_name : ''; ?>" required>
-                    <label>Lien e-mail:</label>
-                    <input type="text" name="email_link" placeholder="<?php _e('Séparez les email par ;', 'webdigit-library') ?>" value="<?php echo isset($category_to_edit) ? $category_to_edit->email_link : ''; ?>">
+                    <label><?php _e( 'Email adresses', 'webdigit-library' ); ?></label>
+                    <input type="text" name="email_link" placeholder="<?php _e('email must be separated with ;', 'webdigit-library') ?>" value="<?php echo isset($category_to_edit) ? $category_to_edit->email_link : ''; ?>">
                 </div>
                 <div class="input-wrapper">
-                    <label>Catégorie parente:</label>
+                    <label><?php _e( 'Parent category', 'webdigit-library' ); ?></label>
                     <select name="parent_category">
-                        <option value="0">Aucune</option>
+                        <option value="0"><?php _e( 'None', 'webdigit-library' ); ?></option>
                         <?php foreach ($categories as $category): ?>
                             <option value="<?php echo $category->id; ?>" <?php echo isset($category_to_edit) && $category_to_edit->parent_id === $category->id ? 'selected' : ''; ?>><?php echo $category->category_name; ?></option>
                         <?php endforeach; ?>
                     </select>
-                    <label for="image_url" style="display:none;">URL de l'image:</label>
+                    <label for="image_url" style="display:none;"><?php _e( 'Image URL', 'webdigit-library' ); ?></label>
                     <input type="text" id="image_url" value="<?php echo isset($category_to_edit) ? $category_to_edit->image_url : ''; ?>" name="image_url" style="display:none;">
                     <input type="hidden" id="image_id" name="image_id"><br>
-                    <a href="#" id="select_image">Sélectionner une image</a><br>
+                    <a href="#" id="select_image"><?php _e( 'Select an image', 'webdigit-library' ); ?></a><br>
                     <div id="image_preview"><?php if (isset($category_to_edit) && $category_to_edit->image_url): ?><img src="<?php echo $category_to_edit->image_url; ?>" width="50" height="50" alt=""><?php endif; ?></div><br>
                     <input type="submit" name="wdlb_submit_category" value="<?php echo isset($category_to_edit) ? 'Enregistrer les modifications' : 'Ajouter la catégorie'; ?>">
                     <?php if (isset($category_to_edit)) : ?>
@@ -72,12 +72,12 @@ function wdlb_manage_categories() {
         <table class="wp-list-table widefat fixed striped">
             <thead>
                 <tr>
-                    <th>Nom</th>
-                    <th>Image</th>
-                    <th>Parent</th>
-                    <th>Email</th>
-                    <th>Date de création</th>
-                    <th>Actions</th> <!-- Nouvelle colonne pour les actions -->
+                    <th><?php _e( 'Name', 'webdigit-library' ); ?></th>
+                    <th><?php _e( 'Image', 'webdigit-library' ); ?></th>
+                    <th><?php _e( 'Parent category', 'webdigit-library' ); ?></th>
+                    <th><?php _e( 'Emails', 'webdigit-library' ); ?></th>
+                    <th><?php _e( 'Created at', 'webdigit-library' ); ?></th>
+                    <th><?php _e( 'Actions', 'webdigit-library' ); ?></th>
                 </tr>
             </thead>
             <tbody>
@@ -97,10 +97,10 @@ function wdlb_manage_categories() {
                         <td><?php echo $category->created_at; ?></td>
                         <td>
                             <a href="<?php echo admin_url( 'admin.php?page=wdlb_categories&delete=' . $category->id ); ?>" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette catégorie ?');">
-                                <span class="dashicons dashicons-trash"></span> <!-- Icône de suppression -->
+                                <span class="dashicons dashicons-trash"></span> 
                             </a>
                             <a href="<?php echo admin_url( 'admin.php?page=wdlb_categories&edit=' . $category->id ); ?>">
-                                <span class="dashicons dashicons-edit"></span> <!-- Icône d'édition -->
+                                <span class="dashicons dashicons-edit"></span> 
                             </a>
                         </td>
                     </tr>

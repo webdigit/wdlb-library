@@ -30,7 +30,7 @@ function wdlb_manage_linked_files() {
     ?>
     <div class="wdlb-container">
         <div class="wrapper">
-            <h2>Gérer les fichiers liés</h2>
+            <h2><?php _e( 'Manage library content', 'webdigit-library' ); ?></h2>
 
             <!-- Formulaire pour ajouter ou modifier un fichier lié -->
             <form method="post" class="wdlb-form">
@@ -39,13 +39,13 @@ function wdlb_manage_linked_files() {
                 <input type="hidden" name="file_id" value="<?php echo isset($file_to_edit) ? $file_to_edit->id : ''; ?>">
                 <input type="hidden" id="document_id" name="post_id" value="<?php echo isset($file_to_edit) ? $file_to_edit->post_id : ''; ?>">
                 <div class="input-wrapper">
-                    <label>Name:</label>
+                    <label><?php _e( 'Name', 'webdigit-library' ); ?></label>
                     <input type="text" name="name" value="<?php echo isset($file_to_edit) ? $file_to_edit->name : ''; ?>" required><br>
-                    <label>Description:</label>
+                    <label><?php _e( 'Description', 'webdigit-library' ); ?></label>
                     <input type="text" name="desc_text" value="<?php echo isset($file_to_edit) ? $file_to_edit->desc_text : ''; ?>"><br>
                 </div>
                 <div class="input-wrapper">
-                    <label>Catégorie:</label><br>
+                    <label><?php _e( 'Categories', 'webdigit-library' ); ?></label><br>
                     <?php foreach ($categories as $category) : ?>
                         <?php
                             $checked = false;
@@ -67,9 +67,9 @@ function wdlb_manage_linked_files() {
                     <br>
                 </div>
                 <div class="input-wrapper">
-                    <label for="image_url">Image couverture:</label>
+                    <label for="image_url"><?php _e( 'Cover image', 'webdigit-library' ); ?></label>
                     <input type="text" id="image_url" name="img_couv" value="<?php echo isset($file_to_edit) ? $file_to_edit->img_couv : ''; ?>" style="display:none;">
-                    <a href="#" id="select_image">Sélectionner une image de couverture</a>
+                    <a href="#" id="select_image"><?php _e( 'Select a cover image', 'webdigit-library' ); ?></a>
                     <div id="image_preview">
                         <?php if (isset($file_to_edit) && $file_to_edit->img_couv): ?>
                             <img src="<?php echo $file_to_edit->img_couv; ?>" width="50" height="50" alt="">
@@ -78,14 +78,14 @@ function wdlb_manage_linked_files() {
 
                     <button type="button" id="toggleFields" class="button">Encoder un lien</button>
                     <div id="toggleLinkField">
-                        <label>Lien:</label>
+                        <label><?php _e( 'Link url', 'webdigit-library' ); ?></label>
                         <input type="text" id="link" name="link" value="<?php echo isset($file_to_edit) ? $file_to_edit->link : ''; ?>"><br>
                     </div>
 
                     <div id="toggleDocField">
-                        <label for="document_url">Ressource:</label>
+                        <label for="document_url"><?php _e( 'Ressources', 'webdigit-library' ); ?></label>
                         <input type="hidden" id="document_url" name="document_url" value="<?php echo isset($file_to_edit) ? $file_to_edit->document_url : ''; ?>">
-                        <a href="#" id="select_document_url">Sélectionner une ressource</a>
+                        <a href="#" id="select_document_url"><?php _e( 'Select a ressource', 'webdigit-library' ); ?></a>
                         <div id="document_url_preview">
                             <?php if (isset($file_to_edit) && $file_to_edit->document_url): ?>
                                 <?php $thumbnail = str_replace('.pdf', '-pdf.jpg', $file_to_edit->document_url); ?>
@@ -106,13 +106,13 @@ function wdlb_manage_linked_files() {
         <table class="wp-list-table widefat fixed striped">
             <thead>
                 <tr>
-                    <th>Nom</th>
-                    <th>Description</th>
-                    <th>Catégorie</th>
-                    <th>Image de couverture</th>
-                    <th>Ressource</th>
-                    <th>Date de création</th>
-                    <th>Actions</th>
+                    <th><?php _e( 'Name', 'webdigit-library' ); ?></th>
+                    <th><?php _e( 'Description', 'webdigit-library' ); ?></th>
+                    <th><?php _e( 'Categories', 'webdigit-library' ); ?></th>
+                    <th><?php _e( 'Cover image', 'webdigit-library' ); ?></th>
+                    <th><?php _e( 'Ressource', 'webdigit-library' ); ?></th>
+                    <th><?php _e( 'Created at', 'webdigit-library' ); ?></th>
+                    <th><?php _e( 'Actions', 'webdigit-library' ); ?></th>
                 </tr>
             </thead>
             <tbody>
