@@ -21,8 +21,8 @@ class WDLB_Library_Initializer {
     public $options = array(
         'wd_lib_auth_roles' => '',
         'wd_lib_limit_dl' => 0,
-        'wd_lib_admin_mails' => '', 
-        'wd_lib_mail_title' => '', 
+        'wd_lib_admin_mails' => '',
+        'wd_lib_mail_title' => '',
         'wd_lib_mail_message' => ''
     );
 
@@ -30,8 +30,8 @@ class WDLB_Library_Initializer {
         'general' => array(
             'wd_lib_auth_roles' => '',
             'wd_lib_limit_dl' => 0,
-            'wd_lib_admin_mails' => '', 
-            'wd_lib_mail_title' => '', 
+            'wd_lib_admin_mails' => '',
+            'wd_lib_mail_title' => '',
             'wd_lib_mail_message' => ''
         ),
         'version' => '1.0'
@@ -39,7 +39,7 @@ class WDLB_Library_Initializer {
 
 	/**
 	 * Class WDLB_Library_Initializer
-	 * 
+	 *
 	 * This class initializes the library plugin by defining constants, retrieving options, and adding necessary actions.
 	 */
 	public function __construct() {
@@ -125,16 +125,19 @@ class WDLB_Library_Initializer {
         include_once WD_LIBRARY_PATH . 'includes/categories/class-wdlb-categories.php';
 		include_once WD_LIBRARY_PATH . 'includes/categories/wdlb-config-categories.php';
         include_once WD_LIBRARY_PATH . 'includes/stats/class-wdlb-stats.php';
+        include_once WD_LIBRARY_PATH . 'includes/stats/wdlb-config-stats.php';
         include_once WD_LIBRARY_PATH . 'includes/link_files/class-wdlb-link-files.php';
         include_once WD_LIBRARY_PATH . 'includes/link_files/wdlb-config-link-files.php';
+        include_once WD_LIBRARY_PATH . 'includes/config/class-wdlb-settings.php';
 		include_once WD_LIBRARY_PATH . 'includes/class-wdlb-admin-notices.php';
+		include_once WD_LIBRARY_PATH . 'includes/wdlb-render-library.php';
 
 		// Settings Tabs.
 		include_once WD_LIBRARY_PATH . 'includes/wdlb-config.php';
 		include_once WD_LIBRARY_PATH . 'includes/config/wdlb-config-settings-init.php';
 		include_once WD_LIBRARY_PATH . 'includes/config/wdlb-config-settings.php';
 	}
-    
+
 	/**
 	 * Add admin menu.
 	 *
@@ -157,11 +160,12 @@ class WDLB_Library_Initializer {
 	public function enqueue_scripts() {
         wp_enqueue_script('wd-library-script', WD_LIBRARY_URL .  '/js/library.js', array('jquery'), '1.0', true);
         wp_enqueue_script('font-awesome', 'https://kit.fontawesome.com/bccc55e953.js', array('jquery'), '1.0', true);
-        
-        
-        wp_localize_script('wd-library-script', 'limitations', $this->get_limitation());
+
+
+        wp_localize_script('wd-library-script', 'limitations', array($this->get_limitation()));
 
         wp_enqueue_style('wd_style_css', WD_LIBRARY_URL .  '/css/main.css', array(), $this->defaults['version']);
+        wp_enqueue_style('wd_font_awesome_css', WD_LIBRARY_URL .  '/css/all.min.css', array(), $this->defaults['version']);
 	}
 
     /**
@@ -241,7 +245,7 @@ class WDLB_Library_Initializer {
 	 * Callback for admin stats menu.
 	 */
 	public function wdlb_stats_callback() {
-		// wdlb_config_form();
+		wdlb_display_stats();
 	}
 
 	/**
@@ -250,5 +254,5 @@ class WDLB_Library_Initializer {
 	public function wdlb_categories_callback() {
 		wdlb_manage_categories();
 	}
-    
+
 }

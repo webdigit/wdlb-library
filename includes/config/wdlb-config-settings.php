@@ -74,7 +74,7 @@ function wdlb_settings_section_callback() {
                         $checked = false;
                         if ( isset($auth_roles) && is_array($auth_roles) && count($auth_roles) > 0) {
                             foreach ($auth_roles as $auth_role) {
-                                if ($role['name'] === $auth_role) {
+                                if (strtolower($role['name']) === $auth_role) {
                                     $checked = true;
                                     break;
                                 }
@@ -82,7 +82,7 @@ function wdlb_settings_section_callback() {
                         }
                     ?>
                     <label>
-                        <input type="checkbox" name="wd_lib_auth_roles[]" value="<?php echo $role['name']; ?>" <?php echo $checked ? 'checked' : ''; ?>>
+                        <input type="checkbox" name="wd_lib_auth_roles[]" value="<?php echo strtolower($role['name']); ?>" <?php echo $checked ? 'checked' : ''; ?>>
                         <?php echo $role['name']; ?>
                     </label><br>
                 <?php endforeach; ?>
@@ -99,7 +99,7 @@ function wdlb_settings_section_callback() {
 			</th>
 			<td>
 				<label class="switch">
-					<input type="checkbox" id="wd_lib_active_search" name="wd_lib_active_search" <?php echo ( get_option( 'wd_lib_active_search', 'on' ) === 'on' ) ? 'checked' : ''; ?>>
+					<input type="checkbox" id="wd_lib_active_search" name="wd_lib_active_search" <?php echo ( get_option( 'wd_lib_active_search', '1' ) === '1' ) ? 'checked' : ''; ?>>
 					<span class="slider round"></span>
 				</label>
 			</td>

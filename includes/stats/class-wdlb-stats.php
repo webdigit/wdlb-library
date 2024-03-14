@@ -32,7 +32,7 @@ class WDLB_Stats {
 	/**
 	 * Constructor.
 	 */
-	private function __construct() {
+	public function __construct() {
 		global $wpdb;
 		$this->wpdb                = $wpdb;
 		$this->table_name          = $wpdb->prefix . 'wdlb_library_stats';
@@ -93,4 +93,14 @@ class WDLB_Stats {
             )
         );
     }
+
+/**
+ * Retrieves all the stats from the database.
+ *
+ * @return array|null The array of stats or null if no stats found.
+ */
+public function get_all_stats() {
+	$sql = "SELECT * FROM $this->table_name";
+	return $this->wpdb->get_results( $sql );
+}
 }
