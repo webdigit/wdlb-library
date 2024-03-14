@@ -33,12 +33,14 @@
 
 #wdlb-content .wdlb-content-item {
     padding: 5px;
-    width: 29%;
+    width: 28%;
     margin: 5px;
     position: relative;
     display: flex;
     flex-direction: column;
     height: 200px;
+    border: 1px solid #cfcfcf;
+    border-radius: 0;
 }
 
 #wdlb-content .wdlb-content-item .wdlb-content-item-name {

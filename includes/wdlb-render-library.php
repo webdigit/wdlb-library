@@ -129,22 +129,23 @@ function create_request_button($file) {
  * @return string The generated style content.
  */
 function add_content_background($file) {
-    if (!$file->img_couv) {
-        return '';
-    }
-
     $content = '<style>';
-    $content .= '.wd-item-' . $file->id . '::before {';
-    $content .= 'content: "";';
-    $content .= 'position: absolute;';
-    $content .= 'top: 0;';
-    $content .= 'bottom: 0;';
-    $content .= 'right: 0;';
-    $content .= 'left: 0;';
-    $content .= 'background-size: cover;';
-    $content .= 'background-image: url(\'' . $file->img_couv . '\');';
-    $content .= 'opacity: 0.10;';
-    $content .= 'z-index: -1;';
+    if ($file->img_couv) {
+        $content .= '.wd-item-' . $file->id . '::before {';
+        $content .= 'content: "";';
+        $content .= 'position: absolute;';
+        $content .= 'top: 0;';
+        $content .= 'bottom: 0;';
+        $content .= 'right: 0;';
+        $content .= 'left: 0;';
+        $content .= 'background-size: cover;';
+        $content .= 'background-image: url(\'' . $file->img_couv . '\');';
+        $content .= 'opacity: 0.10;';
+        $content .= 'z-index: -1;';
+    } else {
+        $content .= '.wd-item-' . $file->id . '{';
+        $content .= 'background-color: #fff;';
+    }
     $content .= '}';
     $content .= '</style>';
 
