@@ -37,6 +37,7 @@ function wdlb_general_settings_save_options() {
     wdlb_general_settings_save_option( 'wd_lib_auth_roles' );
     wdlb_general_settings_save_option( 'wd_lib_active_search' );
     wdlb_general_settings_save_option( 'wd_lib_admin_mails' );
+    wdlb_general_settings_save_option( 'wd_lib_sender_mails' );
     wdlb_general_settings_save_option( 'wd_lib_mail_title' );
     wdlb_general_settings_save_option( 'wd_lib_mail_message' );
     new WDLB_Admin_Notices( 2, __( 'Settings saved successfully !', 'webdigit-library' ) );
@@ -99,7 +100,7 @@ function wdlb_settings_section_callback() {
 			</th>
 			<td>
 				<label class="switch">
-					<input type="checkbox" id="wd_lib_active_search" name="wd_lib_active_search" <?php echo ( get_option( 'wd_lib_active_search', '1' ) === '1' ) ? 'checked' : ''; ?>>
+					<input type="checkbox" id="wd_lib_active_search" name="wd_lib_active_search" <?php echo ( get_option( 'wd_lib_active_search', 'on' ) === 'on' ) ? 'checked' : ''; ?>>
 					<span class="slider round"></span>
 				</label>
 			</td>
@@ -117,6 +118,19 @@ function wdlb_settings_section_callback() {
                 <input type="text" name="wd_lib_limit_dl" value="<?php echo esc_attr( get_option( 'wd_lib_limit_dl', '0' ) ); ?>" />
             </td>
 		</tr>
+            <tr valign="top">
+                <th scope="row">
+                    <?php
+                    esc_html_e(
+                        'Sender mail:',
+                        'webdigit-library'
+                    );
+                    ?>
+                </th>
+                <td>
+                    <input required type="mail" name="wd_lib_sender_mails" value="<?php echo esc_attr( get_option( 'wd_lib_sender_mails', '' ) ); ?>" />
+                </td>
+            </tr>
 		<tr valign="top">
 			<th scope="row">
                 <?php
@@ -134,7 +148,7 @@ function wdlb_settings_section_callback() {
 			<th scope="row">
                 <?php
                     esc_html_e(
-                        'Email title:',
+                        'Email title (customer):',
                         'webdigit-library'
                     );
                 ?>
@@ -147,7 +161,7 @@ function wdlb_settings_section_callback() {
 			<th scope="row">
                 <?php
                     esc_html_e(
-                        'Email content:',
+                        'Email content (customer):',
                         'webdigit-library'
                     );
                 ?>

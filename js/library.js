@@ -54,3 +54,37 @@ document.querySelectorAll('.wdlb-request-button').forEach((el) => {
         }
     });
 });
+
+document.getElementById('wdlb-confirmation-request').addEventListener('click', function() {
+    const checked = document.querySelectorAll('.wdlb-checked');
+    const items = [];
+    const categories = [];
+
+    const requestedDatas = [];
+
+    checked.forEach((el) => {
+        requestedDatas.push({
+            files: el.dataset.file_id,
+            categories: el.dataset.categories_id
+        });
+    });
+    if (requestedDatas.length > 0) {
+        document.getElementById('wdlb_hidden_data_field').value = JSON.stringify(requestedDatas);
+        document.getElementById('wdlb-form-popup').style.display = 'block';
+    }
+});
+
+
+document.getElementById('cross-popup').addEventListener('click', function() {
+    document.getElementById('wdlb-form-popup').style.display = 'none';
+})
+
+function wdlb_accept_gdpr (element) {
+    document.getElementById('wdlb_requestFormBtn').disabled = !element.checked;
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const wdlb_gdpr = document.getElementsByClassName('wd-rgpd-check-form')[0];
+    wdlb_accept_gdpr(wdlb_gdpr);
+
+});

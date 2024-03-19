@@ -130,7 +130,10 @@ class WDLB_Library_Initializer {
         include_once WD_LIBRARY_PATH . 'includes/link_files/wdlb-config-link-files.php';
         include_once WD_LIBRARY_PATH . 'includes/config/class-wdlb-settings.php';
 		include_once WD_LIBRARY_PATH . 'includes/class-wdlb-admin-notices.php';
-		include_once WD_LIBRARY_PATH . 'includes/wdlb-render-library.php';
+		include_once WD_LIBRARY_PATH . 'includes/render/wdlb-render-library.php';
+		include_once WD_LIBRARY_PATH . 'includes/render/wdlb-render-form.php';
+		include_once WD_LIBRARY_PATH . 'includes/render/wdlb-render-search.php';
+		include_once WD_LIBRARY_PATH . 'includes/render/wdlb-render-categories-filter.php';
 
 		// Settings Tabs.
 		include_once WD_LIBRARY_PATH . 'includes/wdlb-config.php';

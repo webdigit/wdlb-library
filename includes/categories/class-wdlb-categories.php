@@ -174,5 +174,4 @@ class WDLB_Categories {
 			new WDLB_Admin_Notices( 2, __( 'Catégorie mise à jour avec succès !', 'webdigit-library' ) );
 		}
 	}
-
 }

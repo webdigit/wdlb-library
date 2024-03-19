@@ -60,7 +60,7 @@ class WDLB_Stats {
 		$sql             = "CREATE TABLE $this->table_name (
             id mediumint(9) NOT NULL AUTO_INCREMENT,
 			ressource_name text,
-			document text,
+			categories_name text,
 			email text NOT NULL,
 			name text,
 			surname text,
@@ -78,29 +78,48 @@ class WDLB_Stats {
      * @param array $datas The data to be inserted.
      * @return void
      */
-    public function insert_stats( $datas ) {
+    public function insert_stats( $form_data, $files_data ) {
+        $files = $files_data['file'];
+        $categories = $files_data['categories'];
+
         $now = current_time( 'mysql' );
         $this->wpdb->insert(
             $this->table_name,
             array(
-                'ressource_name' => $datas['ressource_name'],
-                'document'       => $datas['document'],
-                'email'          => $datas['email'],
-                'name'           => $datas['name'],
-                'surname'        => $datas['surname'],
-                'phone'          => $datas['phone'],
-                'requestDate'    => $now,
+                'ressource_name' => $this->wdlb_get_all_files_name($files),
+                'categories_name' => $this->wdlb_get_all_categories_name($categories),
+                'email'           => $form_data['wdlb_email'],
+                'name'            => $form_data['wdlb_name'],
+                'surname'         => $form_data['wdlb_surname'],
+                'phone'           => $form_data['wdlb_phone'],
+                'requestDate'     => $now,
             )
         );
     }
 
-/**
- * Retrieves all the stats from the database.
- *
- * @return array|null The array of stats or null if no stats found.
- */
-public function get_all_stats() {
-	$sql = "SELECT * FROM $this->table_name";
-	return $this->wpdb->get_results( $sql );
-}
+    /**
+     * Retrieves all the stats from the database.
+     *
+     * @return array|null The array of stats or null if no stats found.
+     */
+    public function get_all_stats() {
+        $sql = "SELECT * FROM $this->table_name";
+        return $this->wpdb->get_results( $sql );
+    }
+
+    public function wdlb_get_all_files_name($files) {
+        $files_name = [];
+        foreach ($files as $file) {
+            $files_name[] = $file->name;
+        }
+        return implode(', ', $files_name);
+    }
+
+    public function wdlb_get_all_categories_name($categories) {
+        $categories_name = [];
+        foreach ($categories as $category) {
+            $categories_name[] = $category->category_name;
+        }
+        return implode(', ', $categories_name);
+    }
 }
