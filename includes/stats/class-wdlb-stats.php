@@ -60,6 +60,7 @@ class WDLB_Stats {
 		$sql             = "CREATE TABLE $this->table_name (
             id mediumint(9) NOT NULL AUTO_INCREMENT,
 			ressource_name text,
+			ressource_link text,
 			categories_name text,
 			email text NOT NULL,
 			name text,
@@ -87,6 +88,7 @@ class WDLB_Stats {
             $this->table_name,
             array(
                 'ressource_name' => $this->wdlb_get_all_files_name($files),
+				'ressource_link' => $this->wdlb_get_all_files_link($files),
                 'categories_name' => $this->wdlb_get_all_categories_name($categories),
                 'email'           => $form_data['wdlb_email'],
                 'name'            => $form_data['wdlb_name'],
@@ -122,4 +124,13 @@ class WDLB_Stats {
         }
         return implode(', ', $categories_name);
     }
+
+	public function wdlb_get_all_files_link($files) {
+		$files_link = [];
+		foreach ($files as $file) {
+			$files_link[] = $file->document_url ?: $file->link;
+		}
+
+		return implode(', ', $files_link);
+	}
 }

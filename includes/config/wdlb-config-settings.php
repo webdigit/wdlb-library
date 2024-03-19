@@ -15,18 +15,13 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @param string $option_name The name of the option.
  */
 function wdlb_general_settings_save_option( $option_name ) {
-	if ( ! isset( $_POST['wdlb_settings_nonce'] ) ||
-	! wp_verify_nonce( sanitize_key( $_POST['wdlb_settings_nonce'] ), 'wdlb_settings' ) ) {
-		wp_die( 'Security check failed' );
-	}
+    if ( ! isset( $_POST['wdlb_settings_nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['wdlb_settings_nonce'] ), 'wdlb_settings' ) ) {
+        wp_die( 'Security check failed' );
+    }
 
-	if (is_array($_POST[ $option_name ])) {
-	   $opt_name_sanitize = isset( $_POST[ $option_name ] ) ? json_encode($_POST[ $option_name ]) : '';
-	} else {
-	   $opt_name_sanitize = isset( $_POST[ $option_name ] ) ? sanitize_text_field( wp_unslash( $_POST[ $option_name ] ) ) : '';
-	}
-
-	update_option( $option_name, $opt_name_sanitize );
+    $option_value = isset($_POST[ $option_name ]) ? $_POST[ $option_name ] : ($option_name === 'wd_lib_auth_roles' ? [] : '');
+    $option_value = is_array($option_value) ? json_encode($option_value) : sanitize_text_field( wp_unslash( $option_value ) );
+    update_option( $option_name, $option_value );
 }
 
 /**

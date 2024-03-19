@@ -52,7 +52,7 @@ class WDLB_Settings {
 	    $authorised_roles = json_decode($this->get_settings('wd_lib_auth_roles'));
 		$current_user = wp_get_current_user()->roles;
 
-		if (array_intersect($current_user, $authorised_roles)) {
+		if (is_array($authorised_roles) && array_intersect($current_user, $authorised_roles)) {
             return true;
         }
 

@@ -164,8 +164,8 @@ class WDLB_Library_Initializer {
         wp_enqueue_script('wd-library-script', WD_LIBRARY_URL .  '/js/library.js', array('jquery'), '1.0', true);
         wp_enqueue_script('font-awesome', 'https://kit.fontawesome.com/bccc55e953.js', array('jquery'), '1.0', true);
 
-
-        wp_localize_script('wd-library-script', 'limitations', array($this->get_limitation()));
+        wp_localize_script('wd-library-script', 'limitations', array($this->wdlb_get_settings('wd_lib_limit_dl')));
+        wp_localize_script('wd-library-script', 'libRoles', array($this->wdlb_get_settings('wd_lib_auth_roles')));
 
         wp_enqueue_style('wd_style_css', WD_LIBRARY_URL .  '/css/main.css', array(), $this->defaults['version']);
         wp_enqueue_style('wd_font_awesome_css', WD_LIBRARY_URL .  '/css/all.min.css', array(), $this->defaults['version']);
@@ -176,8 +176,9 @@ class WDLB_Library_Initializer {
 	 *
 	 * @return string
 	 */
-	public function get_limitation() {
-		return $this->options['wd_lib_limit_dl'];
+	public function wdlb_get_settings($setting) {
+		$settings_manager = WDLB_Settings::get_instance();
+		return $settings_manager->get_settings($setting);
 	}
 
     /**

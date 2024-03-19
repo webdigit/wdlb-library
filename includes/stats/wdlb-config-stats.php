@@ -19,7 +19,9 @@ function wdlb_display_stats () {
                     <thead>
                         <tr>
                             <th><?php _e( 'Requested Ressources', 'webdigit-library' ); ?></th>
-                            <th><?php _e( 'Requested by', 'webdigit-library' ); ?></th>
+                            <th><?php _e( 'Name', 'webdigit-library' ); ?></th>
+                            <th><?php _e( 'Surname', 'webdigit-library' ); ?></th>
+                            <th><?php _e( 'Email', 'webdigit-library' ); ?></th>
                             <th><?php _e( 'Request date', 'webdigit-library' ); ?></th>
                         </tr>
                     </thead>
@@ -31,7 +33,9 @@ function wdlb_display_stats () {
                         <?php endif; ?>
                         <?php foreach ($stats as $stat) : ?>
                             <tr>
-                                <td><?php echo $stat->ressource_name; ?></td>
+                                <td><?php echo $stat->ressource_name; ?><span class="wdlb_admin_document_link"><a target="_blank" href="<?php echo $stat->ressource_link;  ?>">link</a></span></td>
+                                <td><?php echo $stat->name; ?></td>
+                                <td><?php echo $stat->surname; ?></td>
                                 <td><?php echo $stat->email; ?></td>
                                 <td><?php echo $stat->requestDate; ?></td>
                             </tr>
