@@ -35,3 +35,15 @@ function wdlb_settings_initialization() {
 		'wdlb_settings'
 	);
 }
+
+add_filter('mce_buttons', 'wdlb_register_buttons');
+function wdlb_register_buttons($buttons) {
+	array_push($buttons, 'wdlb_button');
+	return $buttons;
+}
+
+add_filter('mce_external_plugins', 'wdlb_register_tinymce_javascript');
+function wdlb_register_tinymce_javascript($plugin_array) {
+	$plugin_array['wdlb'] = WD_LIBRARY_URL . '/js/wdlb-insertContent.js';
+	return $plugin_array;
+}

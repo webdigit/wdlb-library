@@ -20,8 +20,16 @@ function wdlb_general_settings_save_option( $option_name ) {
     }
 
     $option_value = isset($_POST[ $option_name ]) ? $_POST[ $option_name ] : ($option_name === 'wd_lib_auth_roles' ? [] : '');
-    $option_value = is_array($option_value) ? json_encode($option_value) : sanitize_text_field( wp_unslash( $option_value ) );
+
+    $option_value = is_array($option_value) ? json_encode($option_value) : wdlb_clean_text_option($option_name, $option_value);
     update_option( $option_name, $option_value );
+}
+
+function wdlb_clean_text_option($option_name, $option_value) {
+    if ($option_name === 'wd_lib_mail_message') {
+        return wp_kses_post(force_balance_tags($option_value));
+    }
+    return sanitize_text_field( wp_unslash( $option_value ) );
 }
 
 /**
