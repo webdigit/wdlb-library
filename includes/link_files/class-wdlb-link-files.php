@@ -103,6 +103,17 @@ class WDLB_Linkfiles {
         }
     }
 
+	/**
+	 * Formats the category IDs.
+	 *
+	 * This function takes a parameter which can be either an array of IDs or a single ID.
+	 * If the parameter is an array, it assigns the array to the `$category_ids` variable.
+	 * If the parameter is a single ID, it creates an array with the ID and assigns the array to the `$category_ids` variable.
+	 * It then serializes the `$category_ids` variable and returns the serialized string.
+	 *
+	 * @param mixed $ids An array of IDs or a single ID.
+	 * @return string The serialized string of category IDs.
+	 */
 	private function format_category_ids($ids) {
 		$category_ids = is_array($ids) ? $ids : array($ids);
 		return serialize($category_ids);

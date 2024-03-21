@@ -1,5 +1,15 @@
 <?php
 
+/**
+ * Renders the form.
+ *
+ * This function constructs the HTML content for the form. It creates a wrapper div with the ID 'wdlb-form-wrapper',
+ * and within this wrapper, it calls the `wdlb_create_form` function to generate the form content.
+ * It also adds a div with the ID 'wdlb-form-fade-screen' within the wrapper.
+ * The function returns the constructed HTML content.
+ *
+ * @return string The HTML content for the form.
+ */
 function wdlb_render_form () {
     $content_form  = '<div id="wdlb-form-wrapper">';
     $content_form .= wdlb_create_form();
@@ -9,6 +19,17 @@ function wdlb_render_form () {
     return $content_form;
 }
 
+/**
+ * Creates the form.
+ *
+ * This function constructs the HTML content for the form. It first checks if the form has been submitted,
+ * and if so, it calls the `wdlb_manage_submited_form` function to handle the submitted form data.
+ * The form includes fields for the user's email, name, surname, and phone number, as well as a hidden field for the file IDs.
+ * It also includes a checkbox for the user to accept the GDPR terms.
+ * The function returns the constructed HTML content.
+ *
+ * @return string The HTML content for the form.
+ */
 function wdlb_create_form () {
     if (isset($_POST['wdlb_form_submit'])) {
         wdlb_manage_submited_form($_POST);
@@ -35,6 +56,15 @@ function wdlb_create_form () {
     return $form;
 }
 
+/**
+ * Manages the submitted form data.
+ *
+ * This function takes an associative array of form data as a parameter. It retrieves the file IDs from the form data,
+ * decodes the JSON string of file IDs into an array, and retrieves information about the files using the `get_all_infos()` function.
+ * It then iterates over the array of file data, and for each file, it sends an email with the form data and file data using the `wdlb_send_email()` function.
+ *
+ * @param array $form_data An associative array of form data. It should include a 'wdlb_files_id' key containing a JSON string of file IDs.
+ */
 function wdlb_manage_submited_form ($form_data) {
     $files_id = $form_data['wdlb_files_id'];
 
@@ -46,70 +76,287 @@ function wdlb_manage_submited_form ($form_data) {
     }
 }
 
+/**
+ * Sends an email and inserts statistics based on the provided form data and file data.
+ *
+ * This function takes two parameters: an associative array of form data and an associative array of file data.
+ * It first calls the `wdlb_prepare_email()` function, passing the form data and file data as arguments. This function prepares the email to be sent.
+ * It then calls the `wdlb_insert_stats()` function, also passing the form data and file data as arguments. This function inserts statistics based on the form data and file data.
+ *
+ * @param array $form_data An associative array of form data.
+ * @param array $files_data An associative array of file data.
+ */
 function wdlb_send_email ($form_data, $files_data) {
-    wdlb_send_admin_email($form_data, $files_data);
-    // wdlb_send_customer_email($email, $name, $surname, $phone, $files);
+    wdlb_prepare_email($form_data, $files_data);
     wdlb_insert_stats($form_data, $files_data);
 }
 
+/**
+ * Inserts statistics based on the provided form data and file data.
+ *
+ * This function takes two parameters: an associative array of form data and an associative array of file data.
+ * It first gets an instance of the `WDLB_Stats` class, which is used to manage statistics.
+ * It then calls the `insert_stats()` method on the `WDLB_Stats` instance, passing the form data and file data as arguments.
+ * The `insert_stats()` method inserts statistics based on the form data and file data.
+ *
+ * @param array $form_data An associative array of form data.
+ * @param array $files_data An associative array of file data.
+ */
 function wdlb_insert_stats ($form_data, $files_data) {
     $stats_manager = WDLB_Stats::get_instance();
     $stats_manager->insert_stats($form_data, $files_data);
 }
 
-function wdlb_send_admin_email ($form_data, $files_data) {
-    $email = $form_data['wdlb_email'];
-    $name = $form_data['wdlb_name'];
-    $surname = $form_data['wdlb_surname'];
-    $phone = $form_data['wdlb_phone'];
-    $files = $files_data['file'];
-    $categories = $files_data['categories'];
-    $emails_to = [];
+/**
+ * Prepares and sends the email based on the provided form data and file data.
+ *
+ * This function takes two parameters: an associative array of form data and an associative array of file data.
+ * It first retrieves the mail message from the settings using the `wdlb_get_mail_message()` function.
+ * It then constructs the content of the email related to the user, the files, and the categories using the `wdlb_construct_mail_content_user()`, `wdlb_construct_mail_content_files()`, and `wdlb_construct_mail_content_categories()` functions, respectively.
+ * It then sends an email to the admin and the user using the `wdlb_send_admin_email()` and `wdlb_send_user_email()` functions, respectively. The email includes the mail message, the user's details, the files, and the categories.
+ *
+ * @param array $form_data An associative array of form data.
+ * @param array $files_data An associative array of file data.
+ */
+function wdlb_prepare_email ($form_data, $files_data) {
+	$message = wdlb_get_mail_message();
 
-    $message = wdlb_get_mail_message() . "<br /><br />";
+	$mail_user_data = wdlb_construct_mail_content_user($form_data);
+	$requested_files_content = wdlb_construct_mail_content_files($files_data);
 
-    $message .= '<b>Nom : </b>' . $name . "<br />";
-    $message .= '<b>Prénom : </b>' . $surname . "<br />";
-    $message .= '<b>Email : </b>' . $email . "<br />";
-    $message .= '<b>Téléphone : </b>' . $phone . "<br /><br />";
+	$requested_categories_content = wdlb_construct_mail_content_categories($files_data);
 
-    $message .= 'Fichiers : ';
-    $message .= '<ul>';
-    foreach ($files as $file) {
-        $message .= "<li>" . $file->name . "</li>";
-    }
-    $message .= '</ul>';
-
-    $message .= 'Catégories : ';
-    $message .= '<ul>';
-    foreach ($categories as $category) {
-        $message .= "<li>" . $category->category_name . "</li>";
-        $emails_to[] = $category->email_link;
-    }
-    $message .= '</ul>';
-
-    $headers = 'From: ' . wdlb_get_sender_email() . "\r\n" .
-        'CC: ' . implode(',', $emails_to) . "\r\n" .
-        'Reply-To: ' . $email . "\r\n".
-        'Content-Type: text/html; charset=UTF-8' . "\r\n";
-    wp_mail(wdlb_get_admin_email(), wdlb_get_mail_title(), $message, $headers);
+	wdlb_send_admin_email($message, $mail_user_data, $requested_files_content, $requested_categories_content);
+	wdlb_send_user_email($message, $mail_user_data, $requested_files_content);
 }
 
+/**
+ * Sends an email to the user based on the provided message, user data, and file content.
+ *
+ * This function takes three parameters: a string message, an associative array of user data, and an associative array of file content.
+ * It first calls the `wdlb_construct_mail_header()` function to construct the email header.
+ * It then replaces the '[wdlb_content_mail_user]' placeholder in the message with the user data content and file content.
+ * It retrieves the document URLs from the file content and assigns them to the `$attachments` variable.
+ * It then sends an email to the user's email address using the `wp_mail()` function. The email includes the mail title, the modified message, the email header, and the attachments.
+ *
+ * @param string $message The email message.
+ * @param array $mail_user_data An associative array of user data. It should include a 'content' key containing the user data content and an 'email' key containing the user's email address.
+ * @param array $requested_files_content An associative array of file content. It should include a 'content' key containing the file content and a 'document_url' key containing the document URLs.
+ */
+function wdlb_send_user_email ($message, $mail_user_data, $requested_files_content) {
+	$headers = wdlb_construct_mail_header();
+	$message = str_replace('[wdlb_content_mail_user]', $mail_user_data['content'] . $requested_files_content['content'], $message);
+	$attachments = $requested_files_content['document_url'];
+
+	wp_mail($mail_user_data['email'], wdlb_get_mail_title(), $message, $headers, $attachments);
+}
+/**
+ * Sends an email to the admin based on the provided message, user data, file content, and category content.
+ *
+ * This function takes four parameters: a string message, an associative array of user data, an associative array of file content, and an associative array of category content.
+ * It first retrieves the email links from the category content and assigns them to the `$emails_to` variable.
+ * It then calls the `wdlb_construct_mail_header()` function to construct the email header, passing the `$emails_to` variable as an argument.
+ * It replaces the '[wdlb_content_mail_user]' placeholder in the message with the user data content, file content, and category content.
+ * It then sends an email to the admin's email address using the `wp_mail()` function. The email includes the mail title, the modified message, and the email header.
+ *
+ * @param string $message The email message.
+ * @param array $mail_user_data An associative array of user data. It should include a 'content' key containing the user data content.
+ * @param array $requested_files_content An associative array of file content. It should include a 'content' key containing the file content.
+ * @param array $requested_categories_content An associative array of category content. It should include a 'content' key containing the category content and an 'emails' key containing the email links.
+ */
+function wdlb_send_admin_email ($message, $mail_user_data, $requested_files_content, $requested_categories_content) {
+	$emails_to = $requested_categories_content['emails'];
+	$headers = wdlb_construct_mail_header($emails_to);
+	$message = str_replace('[wdlb_content_mail_user]', $mail_user_data['content'] . $requested_files_content['content'] . $requested_categories_content['content'], $message);
+
+	wp_mail(wdlb_get_admin_email(), wdlb_get_mail_title(), $message, $headers);
+}
+
+/**
+ * Constructs the email header based on the provided email links.
+ *
+ * This function takes an array of email links as a parameter. If the array is not empty, it adds a 'CC' header with the email links to the email header.
+ * The email header also includes a 'From' header with the sender's email and a 'Content-Type' header with 'text/html; charset=UTF-8'.
+ * The function returns the constructed email header.
+ *
+ * @param array $emails_to An array of email links. Default is false.
+ * @return string The constructed email header.
+ */
+function wdlb_construct_mail_header ($emails_to = false) {
+	$mail_header = 'From: ' . wdlb_get_sender_email() . "\r\n";
+	if ($emails_to) {
+		$mail_header .= 'CC: ' . implode(',', $emails_to) . "\r\n";
+	}
+	$mail_header .= 'Content-Type: text/html; charset=UTF-8' . "\r\n";
+
+	return $mail_header;
+}
+
+/**
+ * Constructs the content of the email related to the user.
+ *
+ * This function takes an array of form data, extracts the user's email, name, surname, and phone number, and constructs a string of HTML content
+ * that lists the user's details. It also collects the user's email.
+ *
+ * The function returns an associative array with two keys:
+ * - 'content': A string of HTML content that lists the user's details.
+ * - 'email': The user's email.
+ *
+ * @param array $form_data An associative array containing form data, including 'wdlb_email', 'wdlb_name', 'wdlb_surname', and 'wdlb_phone' keys.
+ * @return array An associative array with 'content' and 'email' keys.
+ */
+function wdlb_construct_mail_content_user ($form_data) {
+	$email = $form_data['wdlb_email'];
+	$name = $form_data['wdlb_name'];
+	$surname = $form_data['wdlb_surname'];
+	$phone = $form_data['wdlb_phone'];
+
+	$result = [];
+
+	$content = '<br /><b>Nom : </b>' . $name . "<br />";
+	$content .= '<b>Prénom : </b>' . $surname . "<br />";
+	$content .= '<b>Email : </b>' . $email . "<br />";
+	$content .= '<b>Téléphone : </b>' . $phone . "<br /><br />";
+
+	$result['content'] = $content;
+	$result['email'] = $email;
+
+	return $result;
+}
+
+/**
+ * Constructs the content of the email related to the files.
+ *
+ * This function takes an array of file data, extracts the files, and constructs a string of HTML content
+ * that lists the files. It also collects the document URLs and links associated with each file.
+ *
+ * The function returns an associative array with three keys:
+ * - 'content': A string of HTML content that lists the files.
+ * - 'document_url': An array of document URLs associated with each file.
+ * - 'link': An array of links associated with each file.
+ *
+ * @param array $files_data An associative array containing file data, including 'file' key which is an array of files.
+ * @return array An associative array with 'content', 'document_url' and 'link' keys.
+ */
+function wdlb_construct_mail_content_files ($files_data) {
+	$files = $files_data['file'];
+	$result = [];
+
+	$content = '<b>Ressources : </b><br />';
+	$content .= '<ul>';
+	foreach ($files as $file) {
+		$content .= "<li>";
+		if ($file->link) {
+			$content .= "<a href='" . $file->link . "'>" . $file->name . "</a>";
+		} else {
+			$content .= $file->name;
+		}
+		$content .= "</li>";
+		$result['document_url'][] = wdlb_get_file_path($file->document_url);
+		$result['link'][] = $file->link;
+	}
+	$content .= '</ul>';
+	$result['content'] = $content;
+
+	return $result;
+}
+
+/**
+ * Retrieves the file path of a document based on its URL.
+ *
+ * This function uses the `attachment_url_to_postid()` function to get the ID of the attachment (document) based on its URL.
+ * It then uses the `get_attached_file()` function to get the file path of the attachment based on its ID.
+ * The function returns the file path of the attachment.
+ *
+ * @param string $document_url The URL of the document.
+ * @return string The file path of the document.
+ */
+function wdlb_get_file_path ($document_url) {
+	$attachment_id = attachment_url_to_postid($document_url);
+
+	return get_attached_file($attachment_id);
+}
+
+/**
+ * Constructs the content of the email related to the categories.
+ *
+ * This function takes an array of file data, extracts the categories, and constructs a string of HTML content
+ * that lists the categories. It also collects the email links associated with each category.
+ *
+ * The function returns an associative array with two keys:
+ * - 'content': A string of HTML content that lists the categories.
+ * - 'emails': An array of email links associated with each category.
+ *
+ * @param array $files_data An associative array containing file data, including 'categories' key which is an array of categories.
+ * @return array An associative array with 'content' and 'emails' keys.
+ */
+function wdlb_construct_mail_content_categories ($files_data) {
+	$categories = $files_data['categories'];
+	$result = [];
+
+	$content = '<b>Catégories : </b><br />';
+	$content .= '<ul>';
+	foreach ($categories as $category) {
+		$content .= "<li>" . $category->category_name . "</li>";
+		$result['emails'][] = $category->email_link;
+	}
+	$content .= '</ul>';
+	$result['content'] = $content;
+
+	return $result;
+}
+
+/**
+ * Retrieves the admin email from the settings.
+ *
+ * This function gets an instance of the `WDLB_Settings` class and uses it to retrieve the admin email from the settings.
+ * The admin email is identified by the 'wd_lib_admin_mails' key.
+ * The function returns the admin email.
+ *
+ * @return string The admin email.
+ */
 function wdlb_get_admin_email() {
     $settings_manager = WDLB_Settings::get_instance();
     return $settings_manager->get_settings('wd_lib_admin_mails');
 }
 
+/**
+ * Retrieves the mail title from the settings.
+ *
+ * This function gets an instance of the `WDLB_Settings` class and uses it to retrieve the mail title from the settings.
+ * The mail title is identified by the 'wd_lib_mail_title' key.
+ * The function returns the mail title.
+ *
+ * @return string The mail title.
+ */
 function wdlb_get_mail_title() {
     $settings_manager = WDLB_Settings::get_instance();
     return $settings_manager->get_settings('wd_lib_mail_title');
 }
 
+/**
+ * Retrieves the mail message from the settings.
+ *
+ * This function gets an instance of the `WDLB_Settings` class and uses it to retrieve the mail message from the settings.
+ * The mail message is identified by the 'wd_lib_mail_message' key.
+ * The function returns the mail message.
+ *
+ * @return string The mail message.
+ */
 function wdlb_get_mail_message () {
     $settings_manager = WDLB_Settings::get_instance();
     return $settings_manager->get_settings('wd_lib_mail_message');
 }
 
+/**
+ * Retrieves the sender email from the settings.
+ *
+ * This function gets an instance of the `WDLB_Settings` class and uses it to retrieve the sender email from the settings.
+ * The sender email is identified by the 'wd_lib_sender_mails' key.
+ * The function returns the sender email.
+ *
+ * @return string The sender email.
+ */
 function wdlb_get_sender_email () {
     $settings_manager = WDLB_Settings::get_instance();
     return $settings_manager->get_settings('wd_lib_sender_mails');
