@@ -44,6 +44,6 @@ function wdlb_register_buttons($buttons) {
 
 add_filter('mce_external_plugins', 'wdlb_register_tinymce_javascript');
 function wdlb_register_tinymce_javascript($plugin_array) {
-	$plugin_array['wdlb'] = WD_LIBRARY_URL . '/js/wdlb-insertContent.js';
+	$plugin_array['wdlb'] = WD_LIBRARY_URL . '/js/dist/wdlb.tinymceNewContent.bundle.js';
 	return $plugin_array;
 }

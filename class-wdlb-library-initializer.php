@@ -148,7 +148,7 @@ class WDLB_Library_Initializer {
 	 */
 	public function admin_enqueue_scripts() {
         wp_enqueue_media();
-        wp_register_script('wd-admin-script', WD_LIBRARY_URL . '/js/admin.js', array('jquery'), '1.0', true);
+        wp_register_script('wd-admin-script', WD_LIBRARY_URL . '/js/dist/wdlb.admin.bundle.js', array('jquery'), '1.0', true);
         wp_localize_script('wd-admin-script', 'ajax_object', array('ajaxurl' => admin_url('admin-ajax.php')));
         wp_enqueue_script('wd-admin-script');
 
@@ -161,7 +161,7 @@ class WDLB_Library_Initializer {
 	 * @return void
 	 */
 	public function enqueue_scripts() {
-        wp_enqueue_script('wd-library-script', WD_LIBRARY_URL .  '/js/library.js', array('jquery'), '1.0', true);
+        wp_enqueue_script('wd-library-script', WD_LIBRARY_URL .  '/js/dist/wdlb.main.bundle.js', array('jquery'), '1.0', true);
         wp_enqueue_script('font-awesome', 'https://kit.fontawesome.com/bccc55e953.js', array('jquery'), '1.0', true);
 
         wp_localize_script('wd-library-script', 'limitations', array($this->wdlb_get_settings('wd_lib_limit_dl')));

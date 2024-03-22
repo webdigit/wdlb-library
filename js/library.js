@@ -63,8 +63,6 @@
     if (btnConfirmation) {
         btnConfirmation.addEventListener('click', function() {
             const checked = document.querySelectorAll('.wdlb-checked');
-            const items = [];
-            const categories = [];
 
             const requestedDatas = [];
 
@@ -89,9 +87,40 @@
         })
     }
 
+    const closeNotification = document.getElementById('wdlb-notification-close');
+    if (closeNotification) {
+        closeNotification.addEventListener('click', function () {
+            document.getElementById('wdlb-notification-wrapper').style.display = 'none';
+        })
+    }
+
+    document.querySelector('.form').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const formElement = document.getElementById('wdlb-requested-form');
+        const formData = new FormData(formElement);
+
+        const notification_wrapper_element = document.getElementById('wdlb-notification-wrapper');
+        const notification_message_element = document.getElementById('wdlb-notification-msg');
+
+        fetch(ajax_data.admin_ajax + '?action=wdlb_manage_submited_form', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+                notification_message_element.textContent = data.message;
+                notification_wrapper_element.style.display = 'flex';
+                notification_wrapper_element.style.backgroundColor = data.status === 'success' ? '#50C878' : '#8B0000';
+                document.getElementById('wdlb-form-popup').style.display = 'none';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    });
 })();
 
-function wdlb_accept_gdpr (element) {
+window.wdlb_accept_gdpr = function (element) {
     document.getElementById('wdlb_requestFormBtn').disabled = !element.checked;
 }
 

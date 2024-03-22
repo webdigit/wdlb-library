@@ -1,7 +1,6 @@
 (function() {
     tinymce.create('tinymce.plugins.WDLB', {
         init : function(ed, url) {
-            console.log('url', url)
             const parentUrl = url.replace('/js', '')
             ed.addButton('wdlb_button', {
                 title : 'WDLB button',
