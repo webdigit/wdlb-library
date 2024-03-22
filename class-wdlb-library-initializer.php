@@ -52,6 +52,8 @@ class WDLB_Library_Initializer {
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
 		add_action( 'admin_menu', array( $this, 'add_admin_menu' ) );
+		add_action('wp_ajax_wdlb_manage_submited_form', 'wdlb_manage_submited_form');
+		add_action('wp_ajax_nopriv_wdlb_manage_submited_form', 'wdlb_manage_submited_form');
 	}
 
     /**
@@ -166,6 +168,7 @@ class WDLB_Library_Initializer {
 
         wp_localize_script('wd-library-script', 'limitations', array($this->wdlb_get_settings('wd_lib_limit_dl')));
         wp_localize_script('wd-library-script', 'libRoles', array($this->wdlb_get_settings('wd_lib_auth_roles')));
+		wp_localize_script('wd-library-script', 'ajax_data', array('admin_ajax' => admin_url('admin-ajax.php')));
 
         wp_enqueue_style('wd_style_css', WD_LIBRARY_URL .  '/css/main.css', array(), $this->defaults['version']);
         wp_enqueue_style('wd_font_awesome_css', WD_LIBRARY_URL .  '/css/all.min.css', array(), $this->defaults['version']);

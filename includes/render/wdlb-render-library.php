@@ -33,6 +33,7 @@ add_shortcode('wdlb_library', 'wdlb_render_library');
 
 function wdlb_get_library_header() {
     $header = '<div id="wdlb-header">';
+	$header .= wdlb_get_request_notification();
     $header .= '<div id="wdlb-header-infos">';
     $header .= wdlb_create_limation_info(wdlb_get_limitation());
     $header .= wdlb_create_request_validation_button();
@@ -42,6 +43,42 @@ function wdlb_get_library_header() {
     return $header;
 }
 
+/**
+ * Generates the HTML markup for a notification element.
+ *
+ * This function creates a notification element that can be used to display messages to the user.
+ * The notification element is a div with the ID 'wdlb-notification-wrapper' and the class 'wdlb-notification-request'.
+ * Inside this div, there is another div with the class 'wdlb-notification', which contains two span elements:
+ * - The first span element has the ID 'wdlb-notification-msg' and will contain the notification message.
+ * - The second span element has the ID 'wdlb-notification-close' and the class 'wdlb-notification-close', and can be used to close the notification.
+ *
+ * @return string The HTML markup for the notification element.
+ */
+function wdlb_get_request_notification () {
+    $notification = '<div id="wdlb-notification-wrapper" class="wdlb-notification-request">';
+    $notification .= '<div class="wdlb-notification">';
+    $notification .= '<span id="wdlb-notification-msg"></span>';
+    $notification .= '<span id="wdlb-notification-close" class="wdlb-notification-close"></span>';
+    $notification .= '</div>';
+    $notification .= '</div>';
+
+    return $notification;
+}
+
+
+/**
+ * Creates the limitation information HTML element.
+ *
+ * This function takes a limitation value as an argument, which should be a numeric value representing the maximum number of files that can be downloaded per request.
+ *
+ * If the limitation value is not set or is false, the function returns an empty string.
+ * Otherwise, it creates a div element with the ID 'wdlb-limitation-wrapper', which contains two span elements:
+ * - The first span element has the ID 'wdlb-limitation-info' and contains a localized string indicating the maximum number of files that can be downloaded per request.
+ * - The second span element has the ID 'wdlb-limitation-max-msg' and contains a localized string indicating that the maximum number of files per request has been reached.
+ *
+ * @param int|false $limitation The limitation value.
+ * @return string The HTML string for the limitation information element.
+ */
 function wdlb_create_limation_info($limitation) {
     if (!$limitation) {
         return '';
@@ -55,6 +92,13 @@ function wdlb_create_limation_info($limitation) {
     return $limitation_info;
 }
 
+/**
+ * Retrieves the search form.
+ *
+ * This function generates the HTML markup for the search form.
+ *
+ * @return string The HTML markup for the search form.
+ */
 function wdlb_create_request_validation_button() {
     $button = '<div id="wdlb-request-wrapper">';
     $button .= '<button id="wdlb-confirmation-request">'. __('Request', 'webdigit-library') .' '.'<span id="wdlb-count-item">0</span>'. ' ' . __('items', 'webdigit-library') .'</button>';
@@ -115,6 +159,27 @@ function wdlb_create_content($contents) {
     return $content;
 }
 
+
+/**
+ * Creates a request button for a file.
+ *
+ * This function takes a file object as an argument, which should contain an 'id' property and a 'category_id' property.
+ * The 'category_id' property should be a serialized array of category IDs.
+ *
+ * The function first unserializes the 'category_id' property and retrieves the corresponding categories.
+ * It then creates a button element with the following data attributes:
+ * - 'data-category': a string of comma-separated category names
+ * - 'data-id': the ID of the file
+ *
+ * Inside the button, it creates a span element with the following data attributes:
+ * - 'data-categories_id': a string of comma-separated category IDs
+ * - 'data-file_id': the ID of the file
+ *
+ * The span element also contains the localized string 'Add to request'.
+ *
+ * @param object $file The file object.
+ * @return string The HTML string for the request button.
+ */
 function wdlb_create_request_button($file) {
     $categories = wdlb_get_all_categories_for_content(unserialize($file->category_id));
 

@@ -31,12 +31,8 @@ function wdlb_render_form () {
  * @return string The HTML content for the form.
  */
 function wdlb_create_form () {
-    if (isset($_POST['wdlb_form_submit'])) {
-        wdlb_manage_submited_form($_POST);
-    }
-
     $form = '<div id="wdlb-form-popup">';
-    $form .= '<form class="form" method="post">';
+    $form .= '<form id="wdlb-requested-form" class="form" method="post">';
     $form .= '<div id="cross-popup"></div>';
     $form .= '<div class="wdlb-text-form">';
     $form .= '<p>Vous y êtes presque ! Remplissez-les champs ci-dessous et les ressources sélectionnées vous seront automatiquement transmises par mail.</p>';
@@ -57,38 +53,55 @@ function wdlb_create_form () {
 }
 
 /**
- * Manages the submitted form data.
+ * Handles the submitted form data.
  *
- * This function takes an associative array of form data as a parameter. It retrieves the file IDs from the form data,
- * decodes the JSON string of file IDs into an array, and retrieves information about the files using the `get_all_infos()` function.
- * It then iterates over the array of file data, and for each file, it sends an email with the form data and file data using the `wdlb_send_email()` function.
+ * This function retrieves the submitted form data from the $_POST superglobal and the file IDs from the form data.
+ * It then decodes the file IDs from a JSON string to an array and retrieves information about the files.
  *
- * @param array $form_data An associative array of form data. It should include a 'wdlb_files_id' key containing a JSON string of file IDs.
+ * The function then iterates over the array of file data, sending an email for each file and storing the status of each email in the $userStatus array.
+ *
+ * If any of the emails failed to send (indicated by a false value in the $userStatus array), the function echoes a JSON-encoded error message and exits the script.
+ * If all of the emails were sent successfully, the function echoes a JSON-encoded success message and exits the script.
  */
-function wdlb_manage_submited_form ($form_data) {
+function wdlb_manage_submited_form () {
+	$form_data = $_POST;
     $files_id = $form_data['wdlb_files_id'];
 
     $files_data = json_decode(stripslashes($files_id), true);
     $files_data = get_all_infos($files_data);
 
+	$userStatus = [];
+
     foreach ($files_data as $data) {
-        wdlb_send_email($form_data, $data);
+        $userStatus[] = wdlb_send_email($form_data, $data);
     }
+
+	if (in_array(false, $userStatus)) {
+		echo json_encode(['status' => 'error', 'message' => 'Une erreur est survenue lors de l\'envoi de l\'email. Veuillez réessayer.'] );
+	} else {
+		echo json_encode(['status' => 'success', 'message' => 'Votre demande a bien été prise en compte. Vous allez recevoir un email avec les ressources demandées.'] );
+	}
+
+	exit;
 }
 
 /**
- * Sends an email and inserts statistics based on the provided form data and file data.
+ * Sends an email based on the provided form data and file data.
  *
  * This function takes two parameters: an associative array of form data and an associative array of file data.
- * It first calls the `wdlb_prepare_email()` function, passing the form data and file data as arguments. This function prepares the email to be sent.
- * It then calls the `wdlb_insert_stats()` function, also passing the form data and file data as arguments. This function inserts statistics based on the form data and file data.
+ * It first calls the `wdlb_prepare_email` function to prepare and send the email based on the form data and file data.
+ * It then inserts statistics based on the form data and file data using the `wdlb_insert_stats` function.
+ * The function returns the status of the email sent to the user.
  *
  * @param array $form_data An associative array of form data.
  * @param array $files_data An associative array of file data.
+ * @return bool The status of the email sent to the user.
  */
 function wdlb_send_email ($form_data, $files_data) {
-    wdlb_prepare_email($form_data, $files_data);
+    $userMailStatus = wdlb_prepare_email($form_data, $files_data);
     wdlb_insert_stats($form_data, $files_data);
+
+	return $userMailStatus;
 }
 
 /**
@@ -108,15 +121,20 @@ function wdlb_insert_stats ($form_data, $files_data) {
 }
 
 /**
- * Prepares and sends the email based on the provided form data and file data.
+ * Prepares and sends an email based on the provided form data and file data.
  *
  * This function takes two parameters: an associative array of form data and an associative array of file data.
- * It first retrieves the mail message from the settings using the `wdlb_get_mail_message()` function.
- * It then constructs the content of the email related to the user, the files, and the categories using the `wdlb_construct_mail_content_user()`, `wdlb_construct_mail_content_files()`, and `wdlb_construct_mail_content_categories()` functions, respectively.
- * It then sends an email to the admin and the user using the `wdlb_send_admin_email()` and `wdlb_send_user_email()` functions, respectively. The email includes the mail message, the user's details, the files, and the categories.
+ * It first retrieves the email message using the `wdlb_get_mail_message` function.
+ * It then constructs the email content for the user using the `wdlb_construct_mail_content_user` function.
+ * It constructs the email content for the requested files using the `wdlb_construct_mail_content_files` function.
+ * It constructs the email content for the requested categories using the `wdlb_construct_mail_content_categories` function.
+ * The function then sends an email to the admin based on the message, user data, file content, and category content using the `wdlb_send_admin_email` function.
+ * It sends an email to the user based on the message, user data, and file content using the `wdlb_send_user_email` function.
+ * The function returns the status of the email sent to the user.
  *
  * @param array $form_data An associative array of form data.
  * @param array $files_data An associative array of file data.
+ * @return bool The status of the email sent to the user.
  */
 function wdlb_prepare_email ($form_data, $files_data) {
 	$message = wdlb_get_mail_message();
@@ -127,29 +145,35 @@ function wdlb_prepare_email ($form_data, $files_data) {
 	$requested_categories_content = wdlb_construct_mail_content_categories($files_data);
 
 	wdlb_send_admin_email($message, $mail_user_data, $requested_files_content, $requested_categories_content);
-	wdlb_send_user_email($message, $mail_user_data, $requested_files_content);
+	$status = wdlb_send_user_email($message, $mail_user_data, $requested_files_content);
+
+	return $status;
 }
 
 /**
  * Sends an email to the user based on the provided message, user data, and file content.
  *
  * This function takes three parameters: a string message, an associative array of user data, and an associative array of file content.
- * It first calls the `wdlb_construct_mail_header()` function to construct the email header.
- * It then replaces the '[wdlb_content_mail_user]' placeholder in the message with the user data content and file content.
- * It retrieves the document URLs from the file content and assigns them to the `$attachments` variable.
- * It then sends an email to the user's email address using the `wp_mail()` function. The email includes the mail title, the modified message, the email header, and the attachments.
+ * It constructs the email header using the `wdlb_construct_mail_header` function.
+ * It replaces the '[wdlb_content_mail_user]' placeholder in the message with the user data content and file content.
+ * It then sends an email to the user's email address using the `wp_mail()` function. The email includes the mail title, the modified message, the email header, and the document URL as an attachment.
+ * The function returns the status of the email sent to the user.
  *
  * @param string $message The email message.
- * @param array $mail_user_data An associative array of user data. It should include a 'content' key containing the user data content and an 'email' key containing the user's email address.
- * @param array $requested_files_content An associative array of file content. It should include a 'content' key containing the file content and a 'document_url' key containing the document URLs.
+ * @param array $mail_user_data An associative array of user data. It should include a 'content' key containing the user data content.
+ * @param array $requested_files_content An associative array of file content. It should include a 'content' key containing the file content and a 'document_url' key containing the document URL.
+ * @return bool The status of the email sent to the user.
  */
 function wdlb_send_user_email ($message, $mail_user_data, $requested_files_content) {
 	$headers = wdlb_construct_mail_header();
 	$message = str_replace('[wdlb_content_mail_user]', $mail_user_data['content'] . $requested_files_content['content'], $message);
 	$attachments = $requested_files_content['document_url'];
 
-	wp_mail($mail_user_data['email'], wdlb_get_mail_title(), $message, $headers, $attachments);
+	$mailstatus = wp_mail($mail_user_data['email'], wdlb_get_mail_title(), $message, $headers, $attachments);
+
+	return $mailstatus;
 }
+
 /**
  * Sends an email to the admin based on the provided message, user data, file content, and category content.
  *
