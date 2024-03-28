@@ -48,11 +48,11 @@ class WDLB_Settings {
 	 *
 	 * @return bool Returns true if the current user has an authorized role, false otherwise.
 	 */
-	public function get_acces() {
+	public function get_user_acces() {
 	    $authorised_roles = json_decode($this->get_settings('wd_lib_auth_roles'));
 		$current_user = wp_get_current_user()->roles;
 
-		if (is_array($authorised_roles) && array_intersect($current_user, $authorised_roles)) {
+		if (!count($authorised_roles) || (is_array($authorised_roles) && array_intersect($current_user, $authorised_roles))) {
             return true;
         }
 

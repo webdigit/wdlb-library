@@ -9,11 +9,16 @@
  * @return string The HTML markup for the library section.
  */
 function wdlb_render_library () {
+	$render = '<div id="wdlb-library-wrapper">';
+
     if(!wdlb_get_library_acces()) {
-        return __('Sorry you have no access to this content.', 'webdigit-library');
+		$render .= '<div class="wdlb-not-allowed" >'. __('Sorry you have no access to this content.', 'webdigit-library') . '</div>';
+		$render .= '</div>';
+
+        return $render;
     }
 
-    $render = '<div id="wdlb-library-wrapper">';
+    $render .= '<div id="wdlb-library-wrapper">';
     $render .= wdlb_get_library_header();
     $render .= '<div id="wdlb-library-nav-wrapper">';
     $render .= '<section id="wdlb-sidebar">';
@@ -323,7 +328,7 @@ function wdlb_create_category_icon($category) {
  */
 function wdlb_get_library_acces() {
     $settings_manager = WDLB_Settings::get_instance();
-    return $settings_manager->get_acces();
+    return $settings_manager->get_user_acces();
 }
 
 /**
