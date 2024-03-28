@@ -1,4 +1,14 @@
 {
+  "name": "library",
+  "version": "1.0.0",
+  "description": "",
+  "source": "library.js",
+  "main": "dist/wdlb.bundle.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack"
+  },
+  "author": "Halfkan Julien <j.halfkan@webdigit.be>",
   "devDependencies": {
     "@babel/core": "^7.24.3",
     "@babel/preset-env": "^7.24.3",
