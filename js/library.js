@@ -2,9 +2,6 @@
  * Filters the categories based on the selected checkboxes.
  */
 (function() {
-    if (!JSON.parse(libRoles).length) {
-        return
-    }
     function filterCategories() {
         let filter = [];
         document.querySelectorAll('.wdlb-filter input:checked').forEach((el) => {
