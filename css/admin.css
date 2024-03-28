@@ -18,7 +18,7 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: space-between;
+    justify-content: space-around;
     flex-wrap: wrap;
 }
 
@@ -39,6 +39,17 @@
     width: inherit;
 }
 
+#wdlb-content-upload-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    border: 2px dashed #ccc;
+    margin-bottom: 10px;
+    padding: 10px;
+}
+
 /* Style des boutons */
 .wdlb-form input[type="submit"],
 .wdlb-form .button {
@@ -53,6 +64,12 @@
     border-radius: 5px;
     cursor: pointer;
     line-height: 1.5;
+}
+
+.wdlb-form .button.wdlb-or-another-content{
+    padding: 5px 10px;
+    font-size: 13px;
+    margin: 2px auto 5px;
 }
 
 /* Style du bouton Annuler */

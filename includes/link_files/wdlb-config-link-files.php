@@ -76,22 +76,25 @@ function wdlb_manage_linked_files() {
                         <?php endif; ?>
                     </div><br>
 
-                    <button type="button" id="toggleFields" class="button">Encoder un lien</button>
-                    <div id="toggleLinkField">
-                        <label><?php _e( 'Link url', 'webdigit-library' ); ?></label>
-                        <input type="text" id="link" name="link" value="<?php echo isset($file_to_edit) ? $file_to_edit->link : ''; ?>"><br>
-                    </div>
+                    <div id="wdlb-content-upload-wrapper">
+                        <div id="toggleLinkField">
+                            <label><?php _e( 'Link url', 'webdigit-library' ); ?></label>
+                            <input type="text" id="link" name="link" value="<?php echo isset($file_to_edit) ? $file_to_edit->link : ''; ?>"><br>
+                        </div>
 
-                    <div id="toggleDocField">
-                        <label for="document_url"><?php _e( 'Ressources', 'webdigit-library' ); ?></label>
-                        <input type="hidden" id="document_url" name="document_url" value="<?php echo isset($file_to_edit) ? $file_to_edit->document_url : ''; ?>">
-                        <a href="#" id="select_document_url"><?php _e( 'Select a ressource', 'webdigit-library' ); ?></a>
-                        <div id="document_url_preview">
-                            <?php if (isset($file_to_edit) && $file_to_edit->document_url): ?>
-                                <?php $thumbnail = str_replace('.pdf', '-pdf.jpg', $file_to_edit->document_url); ?>
-                                <a href="<?php echo $file_to_edit->document_url; ?>" target="_blank"><img src="<?php echo $thumbnail; ?>" width="50" height="50" alt=""></a>
-                            <?php endif; ?>
-                        </div><br>
+                        <div id="toggleDocField">
+                            <label for="document_url"><?php _e( 'Ressources', 'webdigit-library' ); ?></label>
+                            <input type="hidden" id="document_url" name="document_url" value="<?php echo isset($file_to_edit) ? $file_to_edit->document_url : ''; ?>">
+                            <a href="#" id="select_document_url"><?php _e( 'Select a ressource', 'webdigit-library' ); ?></a>
+                            <div id="document_url_preview">
+			                    <?php if (isset($file_to_edit) && $file_to_edit->document_url): ?>
+				                    <?php $thumbnail = str_replace('.pdf', '-pdf.jpg', $file_to_edit->document_url); ?>
+                                    <a href="<?php echo $file_to_edit->document_url; ?>" target="_blank"><img src="<?php echo $thumbnail; ?>" width="50" height="50" alt=""></a>
+			                    <?php endif; ?>
+                            </div><br>
+                        </div>
+                        <div>or</div>
+                        <button type="button" id="toggleFields" class="button wdlb-or-another-content">Encoder un lien</button>
                     </div>
                     <input type="submit" name="wdlb_submit_file" value="<?php echo isset($file_to_edit) ? 'Enregistrer les modifications' : 'Ajouter le fichier'; ?>">
                     <?php if (isset($file_to_edit)) : ?>
