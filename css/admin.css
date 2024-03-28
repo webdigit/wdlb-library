@@ -2,6 +2,13 @@
     text-align: center;
 }
 
+/*___________ ICON MENU ___________*/
+#toplevel_page_wdlb div.wp-menu-image img {
+    width: 20px;
+    height: 20px;
+    padding-top: 7px;
+}
+
 /*___________ CATEGORIES ___________*/
 /* Style du formulaire */
 .wdlb-form {
@@ -57,4 +64,17 @@
 /* Style du conteneur principal */
 .wdlb-container {
     margin-top: 20px;
+}
+
+/*___________ Logs ___________*/
+span.wdlb_admin_document_link {
+    padding: 5px 10px;
+    background-color: #0073aa;
+    margin-left: 2px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+span.wdlb_admin_document_link a{
+    color: #fff;
+    text-decoration: none;
 }

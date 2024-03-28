@@ -154,7 +154,7 @@ class WDLB_Library_Initializer {
         wp_localize_script('wd-admin-script', 'ajax_object', array('ajaxurl' => admin_url('admin-ajax.php')));
         wp_enqueue_script('wd-admin-script');
 
-        wp_enqueue_style('wd_style_css', WD_LIBRARY_URL . '/css/style.css', array(), $this->defaults['version']);
+        wp_enqueue_style('wd_style_admin_css', WD_LIBRARY_URL . '/css/admin.css', array(), $this->defaults['version']);
 	}
 
     /**
