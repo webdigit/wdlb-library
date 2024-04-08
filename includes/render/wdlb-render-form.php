@@ -166,12 +166,14 @@ function wdlb_prepare_email ($form_data, $files_data) {
  */
 function wdlb_send_user_email ($message, $mail_user_data, $requested_files_content) {
 	$headers = wdlb_construct_mail_header();
-	$message = str_replace('[wdlb_content_mail_user]', $mail_user_data['content'] . $requested_files_content['content'], $message);
+
+	if (strpos($message, '[wdlb_content_mail_user]')) {
+		$message = str_replace('[wdlb_content_mail_user]', $mail_user_data['content'] . $requested_files_content['content'], $message);
+	}
+
 	$attachments = $requested_files_content['document_url'];
 
-	$mailstatus = wp_mail($mail_user_data['email'], wdlb_get_mail_title(), $message, $headers, $attachments);
-
-	return $mailstatus;
+	return wp_mail($mail_user_data['email'], wdlb_get_mail_title(), $message, $headers, $attachments);
 }
 
 /**

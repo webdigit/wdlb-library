@@ -42,14 +42,14 @@
             if (checked.classList.contains('wdlb-checked')) {
                 checked.classList.remove('wdlb-checked');
                 count.textContent = parseInt(count.textContent) - 1;
-                if (limitations[0] !== '0'){
+                if (limitations[0] !== '0' && limitations[0] !== '' && parseInt(count.textContent) < limitations[0]){
                     document.getElementById('wdlb-limitation-max-msg').style.display = 'none';
                 }
             } else {
-                if (parseInt(count.textContent) < limitations[0] || limitations[0] === '0'){
+                if (parseInt(count.textContent) < limitations[0] || limitations[0] === '0' || limitations[0] === '') {
                     checked.classList.add('wdlb-checked');
                     count.textContent = parseInt(count.textContent) + 1;
-                } else if(limitations[0] !== '0') {
+                } else if(limitations[0] !== '0' && limitations[0] !== '') {
                     document.getElementById('wdlb-limitation-max-msg').style.display = 'block';
                 }
             }
@@ -91,33 +91,40 @@
         })
     }
 
-    document.querySelector('.form').addEventListener('submit', function(event) {
-        event.preventDefault();
+    const formElement = document.querySelector('.form');
+    if (formElement) {
+        formElement.addEventListener('submit', function (event) {
+            event.preventDefault();
 
-        const formElement = document.getElementById('wdlb-requested-form');
-        const formData = new FormData(formElement);
+            const formElement = document.getElementById('wdlb-requested-form');
+            const formData = new FormData(formElement);
 
-        const notification_wrapper_element = document.getElementById('wdlb-notification-wrapper');
-        const notification_message_element = document.getElementById('wdlb-notification-msg');
+            const notification_wrapper_element = document.getElementById('wdlb-notification-wrapper');
+            const notification_message_element = document.getElementById('wdlb-notification-msg');
 
-        fetch(ajax_data.admin_ajax + '?action=wdlb_manage_submited_form', {
-            method: 'POST',
-            body: formData
-        })
-            .then(response => response.json())
-            .then(data => {
-                notification_message_element.textContent = data.message;
-                notification_wrapper_element.style.display = 'flex';
-                notification_wrapper_element.style.backgroundColor = data.status === 'success' ? '#50C878' : '#8B0000';
-                document.getElementById('wdlb-form-popup').style.display = 'none';
+            fetch(ajax_data.admin_ajax + '?action=wdlb_manage_submited_form', {
+                method: 'POST',
+                body: formData
             })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-    });
+                .then(response => response.json())
+                .then(data => {
+                    notification_message_element.textContent = data.message;
+                    notification_wrapper_element.style.display = 'flex';
+                    notification_wrapper_element.style.backgroundColor = data.status === 'success' ? '#50C878' : '#8B0000';
+                    document.getElementById('wdlb-form-popup').style.display = 'none';
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        });
+    }
 })();
 
 window.wdlb_accept_gdpr = function (element) {
+    if (!element) {
+        return;
+    }
+
     document.getElementById('wdlb_requestFormBtn').disabled = !element.checked;
 }
 
