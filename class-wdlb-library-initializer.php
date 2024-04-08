@@ -136,6 +136,7 @@ class WDLB_Library_Initializer {
 		include_once WD_LIBRARY_PATH . 'includes/render/wdlb-render-form.php';
 		include_once WD_LIBRARY_PATH . 'includes/render/wdlb-render-search.php';
 		include_once WD_LIBRARY_PATH . 'includes/render/wdlb-render-categories-filter.php';
+		include_once WD_LIBRARY_PATH . 'includes/render/gutenberg-custom-block/wdlb-add-gutenberg-block.php';
 
 		// Settings Tabs.
 		include_once WD_LIBRARY_PATH . 'includes/wdlb-config.php';
