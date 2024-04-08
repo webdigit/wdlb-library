@@ -138,6 +138,10 @@ class WDLB_Library_Initializer {
 		include_once WD_LIBRARY_PATH . 'includes/render/wdlb-render-categories-filter.php';
 		include_once WD_LIBRARY_PATH . 'includes/render/gutenberg-custom-block/wdlb-add-gutenberg-block.php';
 
+		if (did_action('elementor/loaded' )) {
+			include_once WD_LIBRARY_PATH . 'includes/render/elementor-custom-block/wdlb-add-elementor-widget.php';
+		}
+
 		// Settings Tabs.
 		include_once WD_LIBRARY_PATH . 'includes/wdlb-config.php';
 		include_once WD_LIBRARY_PATH . 'includes/config/wdlb-config-settings-init.php';
