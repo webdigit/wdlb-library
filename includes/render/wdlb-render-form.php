@@ -173,7 +173,7 @@ function wdlb_send_user_email ($message, $mail_user_data, $requested_files_conte
 
 	$attachments = $requested_files_content['document_url'];
 
-	return wp_mail($mail_user_data['email'], wdlb_get_mail_title(), $message, $headers, $attachments);
+	return wp_mail($mail_user_data['email'], wdlb_get_mail_title(), stripslashes($message), $headers, $attachments);
 }
 
 /**
@@ -195,7 +195,7 @@ function wdlb_send_admin_email ($message, $mail_user_data, $requested_files_cont
 	$headers = wdlb_construct_mail_header($emails_to);
 	$message = str_replace('[wdlb_content_mail_user]', $mail_user_data['content'] . $requested_files_content['content'] . $requested_categories_content['content'], $message);
 
-	wp_mail(wdlb_get_admin_email(), wdlb_get_mail_title(), $message, $headers);
+	wp_mail(wdlb_get_admin_email(), wdlb_get_mail_title(), stripslashes($message), $headers);
 }
 
 /**

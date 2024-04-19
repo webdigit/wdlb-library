@@ -18,7 +18,7 @@ function wdlb_render_library () {
         return $render;
     }
 
-    $render .= '<div id="wdlb-library-wrapper">';
+    $render .= '<div id="wdlb-library-wrapper-child">';
     $render .= wdlb_get_library_header();
     $render .= '<div id="wdlb-library-nav-wrapper">';
     $render .= '<section id="wdlb-sidebar">';
@@ -154,7 +154,7 @@ function wdlb_create_content($contents) {
             $content .= wdlb_create_categorie_tag($categories);
         }
 
-        $content .= '<div class="wdlb-content-item-description">' . $file->desc_text . '</div>';
+        $content .= '<div class="wdlb-content-item-description">' . stripslashes($file->desc_text) . '</div>';
 
         $content .= wdlb_create_request_button($file);
 

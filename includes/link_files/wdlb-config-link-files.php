@@ -40,9 +40,9 @@ function wdlb_manage_linked_files() {
                 <input type="hidden" id="document_id" name="post_id" value="<?php echo isset($file_to_edit) ? $file_to_edit->post_id : ''; ?>">
                 <div class="input-wrapper">
                     <label><?php _e( 'Name', 'webdigit-library' ); ?></label>
-                    <input type="text" name="name" value="<?php echo isset($file_to_edit) ? $file_to_edit->name : ''; ?>" required><br>
+                    <input type="text" name="name" value="<?php echo isset($file_to_edit) ? stripslashes($file_to_edit->name) : ''; ?>" required><br>
                     <label><?php _e( 'Description', 'webdigit-library' ); ?></label>
-                    <input type="text" name="desc_text" value="<?php echo isset($file_to_edit) ? $file_to_edit->desc_text : ''; ?>"><br>
+                    <input type="text" name="desc_text" value="<?php echo isset($file_to_edit) ? stripslashes($file_to_edit->desc_text) : ''; ?>"><br>
                 </div>
                 <div class="input-wrapper">
                     <label><?php _e( 'Categories', 'webdigit-library' ); ?></label><br>
@@ -121,8 +121,8 @@ function wdlb_manage_linked_files() {
             <tbody>
                 <?php foreach ($files as $file) : ?>
                     <tr>
-                        <td><?php echo $file->name; ?></td>
-                        <td><?php echo $file->desc_text; ?></td>
+                        <td><?php echo stripslashes($file->name); ?></td>
+                        <td><?php echo stripslashes($file->desc_text); ?></td>
                         <td><?php echo wdlb_get_category_names($file->category_id); ?></td>
                         <td><?php if ($file->img_couv): ?><img src="<?php echo $file->img_couv; ?>" width="50" height="50" alt=""><?php endif; ?></td>
                         <td><?php if ($file->document_url || $file->link): ?>
