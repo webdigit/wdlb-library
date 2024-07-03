@@ -60,7 +60,7 @@ const getDocuments = () => {
          */
         const customUploader = wp.media({
             title: 'Choisir un document',
-            library: { type: 'application/pdf' }, // Utiliser le type 'file' pour les documents
+            library: { type: ['application/pdf', 'image/jpeg', 'image/png'] }, // Utiliser le type 'file' pour les documents
             button: { text: 'Sélectionner' },
             multiple: false
         });
