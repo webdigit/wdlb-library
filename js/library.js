@@ -99,24 +99,34 @@
             const formElement = document.getElementById('wdlb-requested-form');
             const formData = new FormData(formElement);
 
-            const notification_wrapper_element = document.getElementById('wdlb-notification-wrapper');
-            const notification_message_element = document.getElementById('wdlb-notification-msg');
-
             fetch(ajax_data.admin_ajax + '?action=wdlb_manage_submited_form', {
                 method: 'POST',
                 body: formData
             })
                 .then(response => response.json())
                 .then(data => {
-                    notification_message_element.textContent = data.message;
-                    notification_wrapper_element.style.display = 'flex';
-                    notification_wrapper_element.style.backgroundColor = data.status === 'success' ? '#50C878' : '#8B0000';
+                    displayNotification(data.message, data.status);
                     document.getElementById('wdlb-form-popup').style.display = 'none';
                 })
                 .catch(error => {
                     console.error('Error:', error);
                 });
         });
+    }
+
+    const displayNotification = (message, status) => {
+        const notification_wrapper_element = document.getElementById('wdlb-notification-wrapper');
+        const notification_message_element = document.getElementById('wdlb-notification-msg');
+
+        notification_message_element.textContent = message;
+        notification_wrapper_element.style.display = 'flex';
+        notification_wrapper_element.style.backgroundColor = status === 'success' ? '#50C878' : '#8B0000';
+    }
+
+    const addedToRequest = (message) => {
+        const alertAdddedRequestChange = document.getElementById('wdlb-alert-request-change');
+        alertAdddedRequestChange.style.display = 'flex';
+        alertAdddedRequestChange.textContent = message;
     }
 })();
 

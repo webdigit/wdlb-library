@@ -156,7 +156,9 @@ class WDLB_Library_Initializer {
 	public function admin_enqueue_scripts() {
         wp_enqueue_media();
         wp_register_script('wd-admin-script', WD_LIBRARY_URL . '/js/dist/wdlb.admin.bundle.js', array('jquery'), '1.0', true);
-        wp_localize_script('wd-admin-script', 'ajax_object', array('ajaxurl' => admin_url('admin-ajax.php')));
+		$ajaxurl = admin_url('admin-ajax.php');
+		$script = 'const ajax_object = ' . wp_json_encode( array('ajaxurl' => $ajaxurl) ) . ';';
+		wp_add_inline_script('wd-admin-script', $script, 'before');
         wp_enqueue_script('wd-admin-script');
 
         wp_enqueue_style('wd_style_admin_css', WD_LIBRARY_URL . '/css/admin.css', array(), $this->defaults['version']);
@@ -171,9 +173,17 @@ class WDLB_Library_Initializer {
         wp_enqueue_script('wd-library-script', WD_LIBRARY_URL .  '/js/dist/wdlb.main.bundle.js', array('jquery'), '1.0', true);
         wp_enqueue_script('font-awesome', 'https://kit.fontawesome.com/bccc55e953.js', array('jquery'), '1.0', true);
 
-        wp_localize_script('wd-library-script', 'limitations', array($this->wdlb_get_settings('wd_lib_limit_dl')));
-        wp_localize_script('wd-library-script', 'libRoles', array($this->wdlb_get_settings('wd_lib_auth_roles')));
-		wp_localize_script('wd-library-script', 'ajax_data', array('admin_ajax' => admin_url('admin-ajax.php')));
+		$limitations = $this->wdlb_get_settings('wd_lib_limit_dl');
+		$script = 'const limitations = ' . wp_json_encode( array($limitations) ) . ';';
+		wp_add_inline_script('wd-library-script', $script, 'before');
+
+		$libRoles = $this->wdlb_get_settings('wd_lib_auth_roles');
+		$script = 'const libRoles = ' . wp_json_encode( array($libRoles) ) . ';';
+		wp_add_inline_script('wd-library-script', $script, 'before');
+
+		$ajax_data = array('admin_ajax' => admin_url('admin-ajax.php'));
+		$script = 'const ajax_data = ' . wp_json_encode( $ajax_data ) . ';';
+		wp_add_inline_script('wd-library-script', $script, 'before');
 
         wp_enqueue_style('wd_style_css', WD_LIBRARY_URL .  '/css/main.css', array(), $this->defaults['version']);
         wp_enqueue_style('wd_font_awesome_css', WD_LIBRARY_URL .  '/css/all.min.css', array(), $this->defaults['version']);

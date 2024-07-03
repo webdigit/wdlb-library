@@ -106,6 +106,7 @@ function wdlb_create_limation_info($limitation) {
  */
 function wdlb_create_request_validation_button() {
     $button = '<div id="wdlb-request-wrapper">';
+	$button .= '<div id="wdlb-alert-request-change"></div>';
     $button .= '<button id="wdlb-confirmation-request">'. __('Request', 'webdigit-library') .' '.'<span id="wdlb-count-item">0</span>'. ' ' . __('items', 'webdigit-library') .'</button>';
     $button .= '';
     $button .= '</div>';
