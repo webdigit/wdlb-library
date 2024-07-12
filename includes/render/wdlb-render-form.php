@@ -423,6 +423,10 @@ function wdlb_get_files_by_id ($files_id) {
  * @return array An array of categories corresponding to the provided IDs.
  */
 function wdlb_get_categories_by_id($categories_id) {
+	if (empty($categories_id)) {
+		return [];
+	}
+
     $categories_manager = WDLB_Categories::get_instance();
     $categories_id = explode(',', $categories_id);
     $categories = [];
