@@ -154,6 +154,7 @@ function wdlb_create_content($contents) {
         if ($categories) {
             $content .= wdlb_create_categorie_tag($categories);
         }
+//TODO: if file is image display image as thumbnail
 
         $content .= '<div class="wdlb-content-item-description">' . stripslashes($file->desc_text) . '</div>';
 
@@ -343,4 +344,18 @@ function wdlb_get_library_acces() {
 function wdlb_get_limitation() {
     $settings_manager = WDLB_Settings::get_instance();
     return $settings_manager->get_settings('wd_lib_limit_dl');
+}
+
+/**
+ * Checks if the given URL points to a PDF file.
+ *
+ * This function analyzes the URL of a file to determine if its extension indicates
+ * that it is a PDF document. It does this by extracting the file extension from the URL
+ * and comparing it to the string 'pdf'. The comparison is case-sensitive.
+ *
+ * @param string $url The URL of the file to check.
+ * @return bool Returns true if the file extension is 'pdf', otherwise false.
+ */
+function wdlb_is_pdf($url) {
+    return pathinfo($url, PATHINFO_EXTENSION) === 'pdf';
 }
